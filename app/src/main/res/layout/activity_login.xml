@@ -13,9 +13,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
-
-
     <Button
         android:id="@+id/btn_get_access_token"
         android:layout_width="wrap_content"
