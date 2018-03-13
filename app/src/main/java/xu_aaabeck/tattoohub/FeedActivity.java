@@ -88,12 +88,18 @@ public class FeedActivity extends AppCompatActivity {
                     for(int i = 0; i < response.body().getData().length; i++){
                         data.add(response.body().getData()[i]);
                     }
+
+                    //Just for testing
                     for(Data d : data) {
                         System.out.println(d.getImages().getStandard_resolution().getUrl());
                     }
+
+
                     lvAdapter.notifyDataSetChanged();
                 }
-                else {  System.out.println(response.body() != null);}
+                else {
+                    Toast.makeText(getApplicationContext(), "No results found", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
