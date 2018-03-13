@@ -12,6 +12,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import classes.Data;
@@ -85,9 +88,12 @@ public class FeedActivity extends AppCompatActivity {
                     for(int i = 0; i < response.body().getData().length; i++){
                         data.add(response.body().getData()[i]);
                     }
-
+                    for(Data d : data) {
+                        System.out.println(d.getImages().getStandard_resolution().getUrl());
+                    }
                     lvAdapter.notifyDataSetChanged();
                 }
+                else {  System.out.println(response.body() != null);}
             }
 
             @Override
@@ -97,4 +103,6 @@ public class FeedActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
