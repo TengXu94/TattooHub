@@ -26,9 +26,6 @@ import classes.Data;
 import classes.InstagramResponse;
 import classes.RestClient;
 import classes.SimpleListViewAdapter;
-import fragments.ItemOneFragment;
-import fragments.ItemThreeFragment;
-import fragments.ItemTwoFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,38 +44,6 @@ public class FeedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
-
-        //=============NAVIGATION BAR PART=======================
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.navigation);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener
-                (new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        Fragment selectedFragment = null;
-                        switch (item.getItemId()) {
-                            case R.id.action_item1:
-                                selectedFragment = ItemOneFragment.newInstance();
-                                break;
-                            case R.id.action_item2:
-                                selectedFragment = ItemTwoFragment.newInstance();
-                                break;
-                            case R.id.action_item3:
-                                selectedFragment = ItemThreeFragment.newInstance();
-                                break;
-                        }
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.commit();
-                        return true;
-                    }
-                });
-
-        //Manually displaying the first fragment - one time only
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.commit();
-
-        //==================END NAVIGATION VIEW ===========================================
 
 
         // Get the access_token from the intent extra

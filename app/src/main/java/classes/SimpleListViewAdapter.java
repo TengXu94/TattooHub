@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import com.squareup.picasso.Picasso;
 
@@ -40,6 +42,15 @@ public class SimpleListViewAdapter extends ArrayAdapter<Data> {
         ImageView iv_profile = (ImageView) curView.findViewById(R.id.iv_profile);
 
         tv_user_fullname.setText(data.get(position).getUser().getFull_name());
+
+        iv_photo.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(context, "Long Click", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
 
         Picasso.with(context)
                 .load(data.get(position).getUser().getProfile_picture())
