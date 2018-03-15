@@ -1,120 +1,118 @@
 package xu_aaabeck.tattoohub;
 
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
-import android.view.MenuItem;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import classes.Data;
-import classes.InstagramResponse;
-import classes.RestClient;
-import classes.SimpleListViewAdapter;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import adapters.MyPagerAdapter;
+import devlight.io.library.ntb.NavigationTabBar;
+
 
 public class FeedActivity extends AppCompatActivity {
 
-    private EditText etSearch;
-    private ListView lvFeed;
-
-    private SimpleListViewAdapter lvAdapter;
-    private ArrayList<Data> data = new ArrayList<>();
-
-    private String access_token = "";
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feed);
+        setContentView(R.layout.activity_horizontal_ntb2);
+        initUI(getApplicationContext());
+    }
 
+    private void initUI(Context context) {
+        viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
+        viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(),context));
 
-        // Get the access_token from the intent extra
-        Intent i = this.getIntent();
-        access_token = i.getStringExtra("access_token");
-        lvFeed = (ListView) findViewById(R.id.lv_feed);
-        etSearch = (EditText) findViewById(R.id.et_search);
+        final String[] colors = getResources().getStringArray(R.array.default_preview);
 
-        // Set the listview adapter
-        lvAdapter = new SimpleListViewAdapter(this, 0, data);
-        lvFeed.setAdapter(lvAdapter);
+        final NavigationTabBar navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_horizontal);
+        final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.ic_first),
+                        Color.parseColor(colors[0]))
+                        .selectedIcon(getResources().getDrawable(R.drawable.ic_sixth))
+                        .title("Heart")
+                        .badgeTitle("NTB")
+                        .build()
+        );
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.ic_second),
+                        Color.parseColor(colors[1]))
+                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
+                        .title("Cup")
+                        .badgeTitle("with")
+                        .build()
+        );
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.ic_third),
+                        Color.parseColor(colors[2]))
+                        .selectedIcon(getResources().getDrawable(R.drawable.ic_seventh))
+                        .title("Diploma")
+                        .badgeTitle("state")
+                        .build()
+        );
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.ic_fourth),
+                        Color.parseColor(colors[3]))
+                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
+                        .title("Flag")
+                        .badgeTitle("icon")
+                        .build()
+        );
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.ic_fifth),
+                        Color.parseColor(colors[4]))
+                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
+                        .title("Medal")
+                        .badgeTitle("777")
+                        .build()
+        );
+        navigationTabBar.setModels(models);
+        navigationTabBar.setViewPager(viewPager, 1);
 
-        // Set the listener for the "Done" button of the soft keyboard
-        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        navigationTabBar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
 
-                // Don't search if the etSearch is emtpy when pressing the done button
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    if(etSearch.getText().length() <= 0){
-                        Toast.makeText(getApplicationContext(), "Enter a search tag", Toast.LENGTH_SHORT).show();
+            }
 
-                    } else {
-                        lvAdapter.clearListView();
-                        fetchData(etSearch.getText().toString());
-                        etSearch.setText("");
-                        etSearch.clearFocus();
-                    }
+            @Override
+            public void onPageSelected(final int position) {
+                navigationTabBar.getModels().get(position).hideBadge();
 
-                    // Close the soft keyboard
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                    return true;
-                }
-                return false;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(final int state) {
+
             }
         });
 
-    }
-
-    public void fetchData(String tag) {
-        Call<InstagramResponse> call = RestClient.getRetrofitService().getTagPhotos(tag, access_token);
-        call.enqueue(new Callback<InstagramResponse>() {
+        navigationTabBar.postDelayed(new Runnable() {
             @Override
-            public void onResponse(Call<InstagramResponse> call, Response<InstagramResponse> response) {
+            public void run() {
 
-                if (response.body() != null) {
-                    for(int i = 0; i < response.body().getData().length; i++){
-                        data.add(response.body().getData()[i]);
-                    }
-
-                    //Just for testing
-                    for(Data d : data) {
-                        System.out.println(d.getImages().getStandard_resolution().getUrl());
-                    }
+                for (int i = 0; i < navigationTabBar.getModels().size(); i++) {
+                    final NavigationTabBar.Model model = navigationTabBar.getModels().get(i);
+                    navigationTabBar.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            model.showBadge();
 
 
-                    lvAdapter.notifyDataSetChanged();
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "No results found", Toast.LENGTH_SHORT).show();
+                        }
+                    }, i * 100);
                 }
             }
-
-            @Override
-            public void onFailure(Call<InstagramResponse> call, Throwable t) {
-                //Handle failure
-                Toast.makeText(getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
-            }
-        });
+        }, 500);
     }
-
-
 }
