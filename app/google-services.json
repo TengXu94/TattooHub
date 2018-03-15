@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "298253242077",
+    "firebase_url": "https://tattooappproject.firebaseio.com",
+    "project_id": "tattooappproject",
+    "storage_bucket": "tattooappproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298253242077:android:6ff582cc58c33d16",
+        "android_client_info": {
+          "package_name": "xu_aaabeck.tattoohub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298253242077-c2pj2fqigvnk9r3btat8kl6kqkime5b2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "xu_aaabeck.tattoohub",
+            "certificate_hash": "2d8c2ba0c769243379d4664cb5e8d3bc6e28a67b"
+          }
+        },
+        {
+          "client_id": "298253242077-m4eqs9q33ic8t8v4qeudkuofmik898li.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB250jPtBOhgHahrCU51lNMpzcFyVYIr44"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298253242077-m4eqs9q33ic8t8v4qeudkuofmik898li.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
