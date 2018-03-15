@@ -1,10 +1,9 @@
-package xu_aaabeck.tattoohub;
+package fragments;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,16 +20,17 @@ import java.util.ArrayList;
 import classes.Data;
 import classes.InstagramResponse;
 import classes.RestClient;
-import classes.SimpleListViewAdapter;
+import adapters.SimpleListViewAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import xu_aaabeck.tattoohub.R;
 
 /**
  * Created by root on 15.03.18.
  */
 
-public class FirstFragment extends Fragment {
+public class HomeFragment extends Fragment {
     // Store instance variables
     private String title;
     private int page;
@@ -42,8 +42,8 @@ public class FirstFragment extends Fragment {
 
     private String access_token = "";
     // newInstance constructor for creating fragment with arguments
-    public static FirstFragment newInstance(int page, String title) {
-        FirstFragment fragmentFirst = new FirstFragment();
+    public static HomeFragment newInstance(int page, String title) {
+        HomeFragment fragmentFirst = new HomeFragment();
         Bundle args = new Bundle();
         return fragmentFirst;
     }
@@ -59,7 +59,7 @@ public class FirstFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_feed, container, false);
+        View view = inflater.inflate(R.layout.home_fragment, container, false);
         Intent i = getActivity().getIntent();
         access_token = i.getStringExtra("access_token");
         lvFeed = (ListView) view.findViewById(R.id.lv_feed);

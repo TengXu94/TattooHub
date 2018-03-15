@@ -1,4 +1,4 @@
-package classes;
+package adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import com.squareup.picasso.Picasso;
 
+import classes.Data;
 import xu_aaabeck.tattoohub.R;
 
 /**

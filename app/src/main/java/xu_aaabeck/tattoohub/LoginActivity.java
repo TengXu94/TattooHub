@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationLi
             auth_dialog.dismiss();
         }
 
-        Intent i = new Intent(LoginActivity.this, FeedActivity.class);
+        Intent i = new Intent(LoginActivity.this, HomeActivity.class);
         i.putExtra("access_token", access_token);
         startActivity(i);
 

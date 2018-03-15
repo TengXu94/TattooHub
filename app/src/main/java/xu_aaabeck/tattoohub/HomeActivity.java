@@ -8,24 +8,24 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-import adapters.MyPagerAdapter;
+import adapters.FragmentsManager;
 import devlight.io.library.ntb.NavigationTabBar;
 
 
-public class FeedActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_horizontal_ntb2);
+        setContentView(R.layout.home_bar_fragment);
         initUI(getApplicationContext());
     }
 
     private void initUI(Context context) {
         viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
-        viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(),context));
+        viewPager.setAdapter(new FragmentsManager(getSupportFragmentManager(),context));
 
         final String[] colors = getResources().getStringArray(R.array.default_preview);
 

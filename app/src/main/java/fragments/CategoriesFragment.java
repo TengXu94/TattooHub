@@ -1,24 +1,25 @@
-package xu_aaabeck.tattoohub;
+package fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import xu_aaabeck.tattoohub.R;
 
 /**
  * Created by root on 15.03.18.
  */
 
-public class SecondFragment extends Fragment {
+public class CategoriesFragment extends Fragment {
     // Store instance variables
     private String title;
     private int page;
 
     // newInstance constructor for creating fragment with arguments
-    public static FirstFragment newInstance(int page, String title) {
-        FirstFragment fragmentFirst = new FirstFragment();
+    public static HomeFragment newInstance(int page, String title) {
+        HomeFragment fragmentFirst = new HomeFragment();
         Bundle args = new Bundle();
         args.putInt("someInt", page);
         args.putString("someTitle", title);
@@ -38,7 +39,7 @@ public class SecondFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_splash, container, false);
+        View view = inflater.inflate(R.layout.categories_list_fragment, container, false);
 
         return view;
     }
