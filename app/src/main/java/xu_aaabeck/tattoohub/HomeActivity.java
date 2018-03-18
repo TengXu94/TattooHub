@@ -1,10 +1,9 @@
 package xu_aaabeck.tattoohub;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
@@ -12,7 +11,7 @@ import adapters.FragmentsManager;
 import devlight.io.library.ntb.NavigationTabBar;
 
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends FragmentActivity {
 
     private ViewPager viewPager;
 
@@ -20,12 +19,13 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_bar_fragment);
-        initUI(getApplicationContext());
+        initUI();
     }
 
-    private void initUI(Context context) {
+    private void initUI() {
         viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
-        viewPager.setAdapter(new FragmentsManager(getSupportFragmentManager(),context));
+        viewPager.setAdapter(new FragmentsManager(getSupportFragmentManager()));
+
 
         final String[] colors = getResources().getStringArray(R.array.default_preview);
 
@@ -36,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
                         getResources().getDrawable(R.drawable.ic_first),
                         Color.parseColor(colors[0]))
                         .selectedIcon(getResources().getDrawable(R.drawable.ic_sixth))
-                        .title("Heart")
+                        .title("My Profile")
                         .badgeTitle("NTB")
                         .build()
         );
@@ -45,7 +45,7 @@ public class HomeActivity extends AppCompatActivity {
                         getResources().getDrawable(R.drawable.ic_second),
                         Color.parseColor(colors[1]))
                         .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
-                        .title("Cup")
+                        .title("Home")
                         .badgeTitle("with")
                         .build()
         );
@@ -54,26 +54,8 @@ public class HomeActivity extends AppCompatActivity {
                         getResources().getDrawable(R.drawable.ic_third),
                         Color.parseColor(colors[2]))
                         .selectedIcon(getResources().getDrawable(R.drawable.ic_seventh))
-                        .title("Diploma")
+                        .title("My Images")
                         .badgeTitle("state")
-                        .build()
-        );
-        models.add(
-                new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_fourth),
-                        Color.parseColor(colors[3]))
-                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
-                        .title("Flag")
-                        .badgeTitle("icon")
-                        .build()
-        );
-        models.add(
-                new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_fifth),
-                        Color.parseColor(colors[4]))
-                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
-                        .title("Medal")
-                        .badgeTitle("777")
                         .build()
         );
         navigationTabBar.setModels(models);

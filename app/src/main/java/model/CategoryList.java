@@ -36,5 +36,6 @@ public class CategoryList extends ArrayAdapter<Category>{
         View listViewItem = inflater.inflate(R.layout.categories_list_fragment, null, true);
 
         Category category = categoryList.get(position);
+        return null;
     }
 }

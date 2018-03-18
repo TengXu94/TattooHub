@@ -31,9 +31,7 @@ import xu_aaabeck.tattoohub.R;
  */
 
 public class HomeFragment extends Fragment {
-    // Store instance variables
-    private String title;
-    private int page;
+
     private EditText etSearch;
     private ListView lvFeed;
 
@@ -41,8 +39,8 @@ public class HomeFragment extends Fragment {
     private ArrayList<Data> data = new ArrayList<>();
 
     private String access_token = "";
-    // newInstance constructor for creating fragment with arguments
-    public static HomeFragment newInstance(int page, String title) {
+
+    public static HomeFragment newInstance() {
         HomeFragment fragmentFirst = new HomeFragment();
         Bundle args = new Bundle();
         return fragmentFirst;

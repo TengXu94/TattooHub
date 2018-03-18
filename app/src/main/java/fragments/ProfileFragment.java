@@ -9,14 +9,13 @@ import android.view.ViewGroup;
 import xu_aaabeck.tattoohub.R;
 
 /**
- * Created by root on 15.03.18.
+ * Created by root on 18.03.18.
  */
 
-public class CategoriesFragment extends Fragment {
+public class ProfileFragment extends Fragment {
 
-    // newInstance constructor for creating fragment with arguments
-    public static CategoriesFragment newInstance() {
-        CategoriesFragment fragmentFirst = new CategoriesFragment();
+    public static ProfileFragment newInstance() {
+        ProfileFragment fragmentFirst = new ProfileFragment();
         Bundle args = new Bundle();
         fragmentFirst.setArguments(args);
         return fragmentFirst;
@@ -32,8 +31,9 @@ public class CategoriesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.categories_list_fragment, container, false);
+        View view = inflater.inflate(R.layout.profile_fragment, container, false);
 
         return view;
     }
+
 }

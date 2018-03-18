@@ -7,22 +7,12 @@
     android:layout_height="match_parent">
 
 
-    <ListView
-        android:id="@+id/lv_feed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_search">
-
-
-    </ListView>
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Categories"
+        android:text="My Profile"
         tools:layout_editor_absoluteX="151dp"
         tools:layout_editor_absoluteY="0dp" />
 
