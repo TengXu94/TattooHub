@@ -25,4 +25,11 @@ public class FullImageActivity extends AppCompatActivity {
                 .load(getIntent().getStringExtra("photo"))
                 .into(fullView);
     }
+
+    @Override
+    public void onBackPressed() {
+
+        super.onBackPressed();
+        finish();
+    }
 }
