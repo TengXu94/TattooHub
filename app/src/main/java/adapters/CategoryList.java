@@ -1,4 +1,4 @@
-package model;
+package adapters;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 
 import java.util.List;
 
+import model.Category;
 import xu_aaabeck.tattoohub.R;
 
 /**
@@ -23,7 +24,7 @@ public class CategoryList extends ArrayAdapter<Category>{
 
 
     public CategoryList(Activity context, List<Category> categoryList) {
-        super(context, R.layout.categories_list_fragment, categoryList);
+        super(context, R.layout.categories_fragment, categoryList);
         this.context = context;
         this.categoryList = categoryList;
     }
@@ -33,7 +34,7 @@ public class CategoryList extends ArrayAdapter<Category>{
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
 
-        View listViewItem = inflater.inflate(R.layout.categories_list_fragment, null, true);
+        View listViewItem = inflater.inflate(R.layout.categories_fragment, null, true);
 
         Category category = categoryList.get(position);
         return null;
