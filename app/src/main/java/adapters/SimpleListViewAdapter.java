@@ -37,7 +37,7 @@ public class SimpleListViewAdapter extends ArrayAdapter<Data> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View curView = convertView;
         if (curView == null) {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -83,8 +83,8 @@ public class SimpleListViewAdapter extends ArrayAdapter<Data> {
                 }*/
                 Intent i = new Intent(context, FullImageActivity.class);
                 context.startActivity(new Intent(context, FullImageActivity.class));
-                i.putExtra("photo", iv_photo);
-                startActivity(i);
+                i.putExtra("photo", data.get(position).getImages().getStandard_resolution().getUrl());
+                context.startActivity(i);
             }
         });
 
