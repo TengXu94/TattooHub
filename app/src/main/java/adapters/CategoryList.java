@@ -35,7 +35,7 @@ public class CategoryList extends ArrayAdapter<Category>{
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
 
-        View listViewItem = inflater.inflate(R.layout.categories_list_layout, null, true);
+        View listViewItem = inflater.inflate(R.layout.categories_item_layout, null, true);
 
         TextView textViewName = (TextView) listViewItem.findViewById(R.id.textViewCategoryName);
 

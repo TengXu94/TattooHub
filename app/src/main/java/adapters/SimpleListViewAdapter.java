@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,9 +14,8 @@ import java.util.ArrayList;
 import com.squareup.picasso.Picasso;
 
 import classes.Data;
+import xu_aaabeck.tattoohub.CategorySavePop;
 import xu_aaabeck.tattoohub.FullImageActivity;
-import xu_aaabeck.tattoohub.HomeActivity;
-import xu_aaabeck.tattoohub.LoginActivity;
 import xu_aaabeck.tattoohub.R;
 
 /**
@@ -28,7 +26,6 @@ public class SimpleListViewAdapter extends ArrayAdapter<Data> {
 
     private Context context;
     private ArrayList<Data> data;
-    private boolean isImageFitToScreen = false;
 
     public SimpleListViewAdapter(Context context, int textViewResourceId, ArrayList<Data> objects) {
         super(context, textViewResourceId, objects);
@@ -37,7 +34,7 @@ public class SimpleListViewAdapter extends ArrayAdapter<Data> {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, ViewGroup parent) {
         View curView = convertView;
         if (curView == null) {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -63,6 +60,14 @@ public class SimpleListViewAdapter extends ArrayAdapter<Data> {
             @Override
             public boolean onLongClick(View v) {
                 Toast.makeText(context, "Long Click", Toast.LENGTH_SHORT).show();
+
+                Intent i = new Intent(context, CategorySavePop.class);
+
+                i.putExtra("photo", data.get(position).getImages().getStandard_resolution().getUrl());
+                i.putExtra("username", data.get(position).getUser().getFull_name());
+
+                context.startActivity(i);
+
                 return true;
             }
         });

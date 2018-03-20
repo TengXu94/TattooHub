@@ -25,6 +25,9 @@
         <activity android:name=".HomeActivity" />
         <activity android:name=".FaceDetectionActivity" />
         <activity android:name=".FullImageActivity" />
+        <activity android:name=".CategorySavePop"
+            android:theme="@style/AppTheme.SavePopTheme"
+            />
 
     </application>
 

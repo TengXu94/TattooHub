@@ -18,7 +18,6 @@ public class FullImageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.full_image_activity);
-        Intent i = getIntent();
 
         ImageView fullView = (ImageView) findViewById(R.id.full_photo);
         Picasso.with(getApplicationContext())
