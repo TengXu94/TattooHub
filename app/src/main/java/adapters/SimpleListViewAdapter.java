@@ -71,18 +71,7 @@ public class SimpleListViewAdapter extends ArrayAdapter<Data> {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show();
-                /*
-                if(isImageFitToScreen) {
-                    isImageFitToScreen=false;
-                    iv_photo.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    iv_photo.setAdjustViewBounds(true);
-                }else{
-                    isImageFitToScreen=true;
-                    iv_photo.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                    iv_photo.setScaleType(ImageView.ScaleType.FIT_XY);
-                }*/
                 Intent i = new Intent(context, FullImageActivity.class);
-                context.startActivity(new Intent(context, FullImageActivity.class));
                 i.putExtra("photo", data.get(position).getImages().getStandard_resolution().getUrl());
                 context.startActivity(i);
             }

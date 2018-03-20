@@ -4,14 +4,12 @@ package fragments;
 import adapters.CategoryList;
 import model.Category;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,6 +31,7 @@ public class CategoriesFragment extends Fragment {
     ListView listViewCategory;
     DatabaseReference categoriesRef;
     List<Category> categoryList;
+    String user = "VA";
 
     // newInstance constructor for creating fragment with arguments
     public static CategoriesFragment newInstance() {
@@ -68,7 +67,7 @@ public class CategoriesFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        categoriesRef.addValueEventListener(new ValueEventListener() {
+        categoriesRef.orderByChild("user").equalTo(user).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -79,13 +78,6 @@ public class CategoriesFragment extends Fragment {
                     Category category = categorySnapshot.getValue(Category.class);
 
                     categoryList.add(category);
-
-                    Context context = getContext();
-                    int duration = Toast.LENGTH_SHORT;
-
-                    Toast toast = Toast.makeText(context, "***************" + category.getName(), duration);
-                    toast.show();
-
 
                 }
 
