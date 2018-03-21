@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
         android:id="@+id/photo_view"
-        android:src="@drawable/photo_preview"
+        android:src="@mipmap/profile"
         android:layout_centerHorizontal="true"
         />
 </RelativeLayout>
