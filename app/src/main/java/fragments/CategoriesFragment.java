@@ -4,12 +4,15 @@ package fragments;
 import adapters.CategoryList;
 import model.Category;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -17,9 +20,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import xu_aaabeck.tattoohub.CategoryGalleryActivity;
 import xu_aaabeck.tattoohub.R;
 
 /**
@@ -30,8 +37,9 @@ public class CategoriesFragment extends Fragment {
 
     ListView listViewCategory;
     DatabaseReference categoriesRef;
+    Set<Category> userCategories;
     List<Category> categoryList;
-    String user = "VA";
+    String user = "Valerio Tomassi";
 
     // newInstance constructor for creating fragment with arguments
     public static CategoriesFragment newInstance() {
@@ -58,6 +66,23 @@ public class CategoriesFragment extends Fragment {
 
         listViewCategory = (ListView) view.findViewById(R.id.categoriesListView);
 
+        listViewCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Get the selected item text from ListView
+                String selectedItem = ((Category) parent.getItemAtPosition(position)).getName();
+
+                Toast.makeText(getContext(), "" + position + selectedItem, Toast.LENGTH_SHORT).show();
+
+                Intent go = new Intent(getContext(), CategoryGalleryActivity.class);
+                go.putExtra("selectedCategory", selectedItem);
+                go.putExtra("user", user);
+                startActivity(go);
+            }
+        });
+
+
+        userCategories = new HashSet<>();
         categoryList = new ArrayList<>();
 
         return view;
@@ -71,15 +96,18 @@ public class CategoriesFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                userCategories.clear();
                 categoryList.clear();
 
                 for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()){
 
                     Category category = categorySnapshot.getValue(Category.class);
 
-                    categoryList.add(category);
+                    userCategories.add(category);
 
                 }
+
+                categoryList.addAll(userCategories);
 
                 CategoryList adapter = new CategoryList(getActivity(), categoryList);
                 listViewCategory.setAdapter(adapter);

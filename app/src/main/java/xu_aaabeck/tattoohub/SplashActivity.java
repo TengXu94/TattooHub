@@ -38,7 +38,7 @@ public class SplashActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("categories");
 
-        final Category category = new Category("tattoo brutti", "XUIger", "https://www.gstatic.com/webp/gallery/1.jpg");
+        final Category category = new Category("tattoo brutti", "Valerio Tomassi", "https://www.gstatic.com/webp/gallery/1.jpg");
 
 
         myRef.child(category.getId()).setValue(category);

@@ -7,6 +7,7 @@ package model;
 public class Category {
 
     private String id;
+    private String composite_id;
     private String name;
     private String user;
     private String url;
@@ -15,7 +16,8 @@ public class Category {
     }
 
     public Category(String name, String user, String url) {
-        this.id = String.valueOf((user + name).hashCode());
+        this.id = String.valueOf((user + name + url).hashCode());
+        this.composite_id = String.valueOf((user + name).hashCode());
         this.name = name;
         this.user = user;
         this.url = url;
@@ -53,6 +55,14 @@ public class Category {
         this.url = url;
     }
 
+    public String getComposite_id() {
+        return composite_id;
+    }
+
+    public void setComposite_id(String composite_id) {
+        this.composite_id = composite_id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -60,21 +70,20 @@ public class Category {
 
         Category category = (Category) o;
 
-        if (getId() != null ? !getId().equals(category.getId()) : category.getId() != null)
-            return false;
-        if (getName() != null ? !getName().equals(category.getName()) : category.getName() != null)
-            return false;
-        if (getUser() != null ? !getUser().equals(category.getUser()) : category.getUser() != null)
-            return false;
-        return getUrl() != null ? getUrl().equals(category.getUrl()) : category.getUrl() == null;
+        if (!getId().equals(category.getId())) return false;
+        if (!getComposite_id().equals(category.getComposite_id())) return false;
+        if (!getName().equals(category.getName())) return false;
+        if (!getUser().equals(category.getUser())) return false;
+        return getUrl().equals(category.getUrl());
     }
 
     @Override
     public int hashCode() {
-        int result = getId() != null ? getId().hashCode() : 0;
-        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
-        result = 31 * result + (getUser() != null ? getUser().hashCode() : 0);
-        result = 31 * result + (getUrl() != null ? getUrl().hashCode() : 0);
+        int result = getId().hashCode();
+        result = 31 * result + getComposite_id().hashCode();
+        result = 31 * result + getName().hashCode();
+        result = 31 * result + getUser().hashCode();
+        result = 31 * result + getUrl().hashCode();
         return result;
     }
 }
