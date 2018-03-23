@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 import adapters.FragmentsManager;
 import devlight.io.library.ntb.NavigationTabBar;
-import interfaces.IOnFocusListenable;
 
 
 public class HomeActivity extends FragmentActivity {
@@ -24,16 +23,6 @@ public class HomeActivity extends FragmentActivity {
 
         initUI();
     }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-
-        if(fragmentsManager.getCurrentFragment() instanceof IOnFocusListenable) {
-            ((IOnFocusListenable) fragmentsManager.getCurrentFragment()).onWindowFocusChanged(hasFocus);
-        }
-    }
-
 
     private void initUI() {
         viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);

@@ -16,11 +16,6 @@ import fragments.ProfileFragment;
 
 public class FragmentsManager extends FragmentStatePagerAdapter {
     private static int NUM_ITEMS = 3;
-    private Fragment mCurrentFragment;
-    private int position;
-    private Fragment profileFragment = new ProfileFragment();
-    private Fragment homeFragment = new HomeFragment();
-    private Fragment categoriesFragment = new CategoriesFragment();
 
     public FragmentsManager(FragmentManager fragmentManager) {
         super(fragmentManager);
@@ -37,31 +32,14 @@ public class FragmentsManager extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0: // Fragment # 0 - This will show ProfileFragment
-                return profileFragment;
+                return ProfileFragment.newInstance();
             case 1: // Fragment #  1 - This will show HomeFragment
-                return homeFragment;
+                return HomeFragment.newInstance();
             case 2: // Fragment # 2 - This will show CategoriesFragment
-                return categoriesFragment;
+                return CategoriesFragment.newInstance();
             default:
                 return null;
         }
     }
-    public Fragment getCurrentFragment() {
-        return mCurrentFragment;
-    }
-
-    public int getPosition(){
-        return position;
-    }
-
-    @Override
-    public void setPrimaryItem(ViewGroup container, int position, Object object) {
-        if (getCurrentFragment() != object) {
-            mCurrentFragment = ((Fragment) object);
-            position = position;
-        }
-        super.setPrimaryItem(container, position, object);
-    }
-
 }
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,17 +17,13 @@ import android.widget.Toast;
 
 import com.google.common.collect.Sets;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 
 import classes.Data;
 import classes.InstagramResponse;
 import classes.RestClient;
 import adapters.SimpleListViewAdapter;
-import interfaces.IOnFocusListenable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,10 +33,12 @@ import xu_aaabeck.tattoohub.R;
  * Created by root on 15.03.18.
  */
 
-public class HomeFragment extends Fragment implements IOnFocusListenable {
+public class HomeFragment extends Fragment {
 
     private EditText etSearch;
     private ListView lvFeed;
+    int count = 0;
+
     private boolean hasFocus;
     private SimpleListViewAdapter lvAdapter;
     private ArrayList<Data> data = new ArrayList<>();
@@ -61,18 +58,6 @@ public class HomeFragment extends Fragment implements IOnFocusListenable {
 
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            access_token = savedInstanceState.getString("access_token");
-        }
-    }
-
-    public void onWindowFocusChanged(boolean hasFocus) {
-        this.hasFocus = hasFocus;
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -93,54 +78,23 @@ public class HomeFragment extends Fragment implements IOnFocusListenable {
 
         lvAdapter = new SimpleListViewAdapter(getActivity(), 0, data);
         lvFeed.setAdapter(lvAdapter);
-        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-
-                // Don't search if the etSearch is emtpy when pressing the done button
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    if(etSearch.getText().length() <= 0){
-                        Toast.makeText(getActivity().getApplicationContext(), "Enter a search tag", Toast.LENGTH_SHORT).show();
-
-                    } else {
-                        lvAdapter.clearListView();
-                        fetchData(etSearch.getText().toString());
-                        etSearch.setText("");
-                        etSearch.clearFocus();
-                    }
-
-                    // Close the soft keyboard
-                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-                    return true;
-                }
-                return false;
-            }
-        });
         return view;
     }
 
-    public void onStart() {
-        super.onStart();
-        Intent i = getActivity().getIntent();
-        access_token = i.getStringExtra("access_token");
-        lvFeed = (ListView) view.findViewById(R.id.lv_feed);
-        etSearch = (EditText) view.findViewById(R.id.et_search);
-
-        lvAdapter = new SimpleListViewAdapter(getActivity(), 0, data);
-        lvFeed.setAdapter(lvAdapter);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
                 // Don't search if the etSearch is emtpy when pressing the done button
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
                     if(etSearch.getText().length() <= 0){
                         Toast.makeText(getActivity().getApplicationContext(), "Enter a search tag", Toast.LENGTH_SHORT).show();
 
                     } else {
 
-                        Toast.makeText(getActivity().getApplicationContext(), "DIOCANE", Toast.LENGTH_SHORT).show();
                         lvAdapter.clearListView();
                         fetchData(etSearch.getText().toString());
                         etSearch.setText("");
@@ -157,6 +111,37 @@ public class HomeFragment extends Fragment implements IOnFocusListenable {
         });
 
     }
+
+    /*
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        Toast.makeText(getActivity().getApplicationContext(), "Sto in START", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        Toast.makeText(getActivity().getApplicationContext(), "Sto in PAUSA", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+
+        Toast.makeText(getActivity().getApplicationContext(), "M'HANNO STOPPATO", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        Toast.makeText(getActivity().getApplicationContext(), "Sto in RESUME", Toast.LENGTH_SHORT).show();
+    }
+    */
+
     public void fetchData(String tag) {
         Call<InstagramResponse> call = RestClient.getRetrofitService().getTagPhotos(tag, access_token);
         call.enqueue(new Callback<InstagramResponse>() {
