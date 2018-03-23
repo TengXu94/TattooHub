@@ -41,8 +41,9 @@ public class SimpleGridViewAdapter extends ArrayAdapter<String> {
 
 
 
-        Picasso.with(context).load(data.get(position)).error(R.drawable.applogo)
-                .placeholder(R.drawable.applogo)
+        Picasso.with(context).load(data.get(position)).error(R.drawable.ic_error)
+                .placeholder(R.drawable.ic_load)
+                .fit().centerCrop()
                 .into(photo, new EmptyCallback() {
                     @Override public void onSuccess() {
                         //to-do
@@ -54,6 +55,7 @@ public class SimpleGridViewAdapter extends ArrayAdapter<String> {
                 });
 
         Picasso.with(context).load(data.get(position))
+                .fit().centerCrop()
                 .into(photo);
 
 

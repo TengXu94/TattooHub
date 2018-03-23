@@ -44,7 +44,8 @@ public class CategoryGalleryActivity extends AppCompatActivity {
 
         categoryPhotos = new ArrayList<>();
 
-        categoriesRef.orderByChild("composite_id").equalTo(String.valueOf((user + categoryName).hashCode())).addValueEventListener(new ValueEventListener() {
+        categoriesRef.orderByChild("composite_id").equalTo(String.valueOf((user + categoryName).hashCode()))
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
