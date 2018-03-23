@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +16,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.collect.Sets;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import classes.Data;
 import classes.InstagramResponse;
 import classes.RestClient;
 import adapters.SimpleListViewAdapter;
+import interfaces.IOnFocusListenable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,14 +38,14 @@ import xu_aaabeck.tattoohub.R;
  * Created by root on 15.03.18.
  */
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements IOnFocusListenable {
 
     private EditText etSearch;
     private ListView lvFeed;
-
+    private boolean hasFocus;
     private SimpleListViewAdapter lvAdapter;
     private ArrayList<Data> data = new ArrayList<>();
-
+    private View view;
     private String access_token = "";
 
     public static HomeFragment newInstance() {
@@ -53,21 +61,38 @@ public class HomeFragment extends Fragment {
 
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            access_token = savedInstanceState.getString("access_token");
+        }
+    }
+
+    public void onWindowFocusChanged(boolean hasFocus) {
+        this.hasFocus = hasFocus;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("access_token", access_token);
+    }
+
     // Inflate the view for the fragment based on layout XML
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.home_fragment, container, false);
+
+        view = inflater.inflate(R.layout.home_fragment, container, false);
         Intent i = getActivity().getIntent();
         access_token = i.getStringExtra("access_token");
         lvFeed = (ListView) view.findViewById(R.id.lv_feed);
         etSearch = (EditText) view.findViewById(R.id.et_search);
 
-        // Set the listview adapter
         lvAdapter = new SimpleListViewAdapter(getActivity(), 0, data);
         lvFeed.setAdapter(lvAdapter);
-
-        // Set the listener for the "Done" button of the soft keyboard
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -95,6 +120,43 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    public void onStart() {
+        super.onStart();
+        Intent i = getActivity().getIntent();
+        access_token = i.getStringExtra("access_token");
+        lvFeed = (ListView) view.findViewById(R.id.lv_feed);
+        etSearch = (EditText) view.findViewById(R.id.et_search);
+
+        lvAdapter = new SimpleListViewAdapter(getActivity(), 0, data);
+        lvFeed.setAdapter(lvAdapter);
+        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                // Don't search if the etSearch is emtpy when pressing the done button
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    if(etSearch.getText().length() <= 0){
+                        Toast.makeText(getActivity().getApplicationContext(), "Enter a search tag", Toast.LENGTH_SHORT).show();
+
+                    } else {
+
+                        Toast.makeText(getActivity().getApplicationContext(), "DIOCANE", Toast.LENGTH_SHORT).show();
+                        lvAdapter.clearListView();
+                        fetchData(etSearch.getText().toString());
+                        etSearch.setText("");
+                        etSearch.clearFocus();
+                    }
+
+                    // Close the soft keyboard
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+    }
     public void fetchData(String tag) {
         Call<InstagramResponse> call = RestClient.getRetrofitService().getTagPhotos(tag, access_token);
         call.enqueue(new Callback<InstagramResponse>() {
@@ -102,16 +164,15 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<InstagramResponse> call, Response<InstagramResponse> response) {
 
                 if (response.body() != null) {
+
                     for(int i = 0; i < response.body().getData().length; i++){
-                        data.add(response.body().getData()[i]);
+
+                        //Double Tag Problem bypass
+                        if(filter(response.body().getData()[i].getTags())) {
+                            data.add(response.body().getData()[i]);
+                        }
+
                     }
-
-                    //Just for testing
-                    for(Data d : data) {
-                        System.out.println(d.getImages().getStandard_resolution().getUrl());
-                    }
-
-
                     lvAdapter.notifyDataSetChanged();
                 }
                 else {
@@ -123,8 +184,14 @@ public class HomeFragment extends Fragment {
             public void onFailure(Call<InstagramResponse> call, Throwable t) {
                 //Handle failure
                 Toast.makeText(getActivity().getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
+                System.out.println(t);
             }
         });
+    }
+
+    public boolean filter(Object[] tags){
+        HashSet<Object> tags_set = Sets.newHashSet(tags);
+        return tags_set.contains("tattoo");
     }
 
 }

@@ -9,17 +9,14 @@
         android:layout_margin="1dp"
         android:layout_height="200dp">
         <!--150-->
-        <FrameLayout
+        <ImageView
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-            <ImageView
-                android:layout_width="fill_parent"
-                android:id="@+id/imageID"
-                android:layout_gravity="center"
-                app:srcCompat="@drawable/applogo"
-                android:scaleType="fitXY"
-                android:contentDescription="@string/app_name"
-                android:layout_height="match_parent" />
-        </FrameLayout>
+            android:id="@+id/imageID"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/applogo"
+            android:scaleType="fitXY"
+            android:contentDescription="@string/app_name"
+            android:layout_height="match_parent" />
+
     </FrameLayout>
 </LinearLayout>

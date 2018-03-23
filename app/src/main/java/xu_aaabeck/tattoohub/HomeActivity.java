@@ -9,22 +9,36 @@ import java.util.ArrayList;
 
 import adapters.FragmentsManager;
 import devlight.io.library.ntb.NavigationTabBar;
+import interfaces.IOnFocusListenable;
 
 
 public class HomeActivity extends FragmentActivity {
 
     private ViewPager viewPager;
+    private FragmentsManager fragmentsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_bar_fragment);
+
         initUI();
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if(fragmentsManager.getCurrentFragment() instanceof IOnFocusListenable) {
+            ((IOnFocusListenable) fragmentsManager.getCurrentFragment()).onWindowFocusChanged(hasFocus);
+        }
+    }
+
+
     private void initUI() {
         viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
-        viewPager.setAdapter(new FragmentsManager(getSupportFragmentManager()));
+        fragmentsManager = new FragmentsManager(getSupportFragmentManager());
+        viewPager.setAdapter(fragmentsManager);
 
 
         final String[] colors = getResources().getStringArray(R.array.default_preview);

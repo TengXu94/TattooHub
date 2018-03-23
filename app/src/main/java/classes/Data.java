@@ -1,5 +1,10 @@
 package classes;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
+
 /**
  * Created by root on 08.03.18.
  */
@@ -7,6 +12,9 @@ package classes;
 public class Data {
     private Images images;
     private User user;
+    private Object[] tags;
+
+    public Object[] getTags() { return tags;}
 
     public Images getImages() {
         return images;
@@ -46,6 +54,15 @@ public class Data {
             public String getUrl() {
                 return url;
             }
+        }
+    }
+
+
+    public class Tags {
+        private Collection<Objects> tags;
+
+        public Collection<Objects> getTags() {
+            return tags;
         }
     }
 }
