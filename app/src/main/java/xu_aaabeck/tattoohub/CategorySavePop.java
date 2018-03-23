@@ -58,11 +58,12 @@ public class CategorySavePop extends Activity implements AdapterView.OnItemSelec
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int) (width * .7),(int) (height * .5));
+        getWindow().setLayout((int) (width * .8),(int) (height * .6));
 
         userCategories = new HashSet<>();
 
 
+        final EditText newCat = (EditText) findViewById(R.id.newCategoryTextEdit);
         Button saveButton= (Button) findViewById(R.id.saveButton);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -71,31 +72,29 @@ public class CategorySavePop extends Activity implements AdapterView.OnItemSelec
 
                 String selectedCategory = (String) spinner.getSelectedItem();
 
-                final Category category = new Category(selectedCategory, username, photo);
+                if(selectedCategory.equals(getString(R.string.newCategory))) {
+                    String newCategory = "";
 
-                categoriesRef.child(category.getId()).setValue(category);
-            }
-        });
+                    newCategory = (String) newCat.getText().toString();
 
-        final EditText newCat = (EditText) findViewById(R.id.newCategoryTextEdit);
-        Button newCategoryButton= (Button) findViewById(R.id.saveInNewCategoryButton);
+                    if (newCategory.isEmpty())
+                        Toast.makeText(getApplicationContext(), "Specify a New Category", Toast.LENGTH_SHORT).show();
+                    else {
 
-        newCategoryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                        final Category category = new Category(newCategory, username, photo);
 
-                String newCategory = "";
+                        categoriesRef.child(category.getId()).setValue(category);
+                    }
+                }
 
-                newCategory = (String) newCat.getText().toString();
-
-                if(newCategory.isEmpty())
-                    Toast.makeText(getApplicationContext(), "Specify new category", Toast.LENGTH_SHORT).show();
                 else {
 
-                    final Category category = new Category(newCategory, username, photo);
+                    final Category category = new Category(selectedCategory, username, photo);
 
                     categoriesRef.child(category.getId()).setValue(category);
                 }
+
+
             }
         });
     }
@@ -121,13 +120,14 @@ public class CategorySavePop extends Activity implements AdapterView.OnItemSelec
 
                 ArrayList<String> tempCategories = new ArrayList<>();
                 tempCategories.addAll(userCategories);
+                tempCategories.add(0, getString(R.string.newCategory));
 
                 // Create an ArrayAdapter using the string array and a default spinner layout
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
                         android.R.layout.simple_spinner_item, tempCategories);
 
                 // Specify the layout to use when the list of choices appears
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                adapter.setDropDownViewResource(R.layout.spinner_item);
                 // Apply the adapter to the spinner
                 spinner.setAdapter(adapter);
 

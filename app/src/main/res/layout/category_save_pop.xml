@@ -4,26 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     android:backgroundTint="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp"
+        tools:ignore="MissingConstraints">
 
-        <Button
-            android:id="@+id/saveInNewCategoryButton"
+        <TextView
+            android:id="@+id/textView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="SAVE in new category"
-            tools:layout_editor_absoluteX="26dp"
-            tools:layout_editor_absoluteY="274dp"
-            tools:text="SAVE IN NEW CAT" />
+            android:layout_height="30dp"
+            android:text="Select a category:"
+            android:textSize="18sp"
+            tools:text="Your categories:" />
+
+        <Spinner
+            android:id="@+id/categoriesSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimaryDark"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="117dp"
+            />
 
         <EditText
             android:id="@+id/newCategoryTextEdit"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Insert new category name here..."
             android:inputType="text" />
 
         <Button
@@ -33,14 +47,6 @@
             android:text="SAVE"
             tools:layout_editor_absoluteX="148dp"
             tools:layout_editor_absoluteY="274dp" />
-
-        <Spinner
-            android:id="@+id/categoriesSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/colorPrimaryDark"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="117dp" />
 
 
     </LinearLayout>

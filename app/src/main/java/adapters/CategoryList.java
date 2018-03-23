@@ -18,13 +18,13 @@ import xu_aaabeck.tattoohub.R;
  * Created by White_Orchard on 15/03/2018.
  */
 
-public class CategoryList extends ArrayAdapter<Category>{
+public class CategoryList extends ArrayAdapter<String>{
 
     private Activity context;
-    private List<Category> categoryList;
+    private List<String> categoryList;
 
 
-    public CategoryList(Activity context, List<Category> categoryList) {
+    public CategoryList(Activity context, List<String> categoryList) {
         super(context, R.layout.categories_fragment, categoryList);
         this.context = context;
         this.categoryList = categoryList;
@@ -39,9 +39,9 @@ public class CategoryList extends ArrayAdapter<Category>{
 
         TextView textViewName = (TextView) listViewItem.findViewById(R.id.textViewCategoryName);
 
-        Category category = categoryList.get(position);
+        String category = categoryList.get(position);
 
-        textViewName.setText(category.getName());
+        textViewName.setText(category);
 
 
 

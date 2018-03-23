@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">TattooHub</string>
     <string name="login">TattooHub</string>
+    <string name="newCategory">New Category</string>
 </resources>

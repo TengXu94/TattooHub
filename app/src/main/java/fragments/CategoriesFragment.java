@@ -37,8 +37,8 @@ public class CategoriesFragment extends Fragment {
 
     ListView listViewCategory;
     DatabaseReference categoriesRef;
-    Set<Category> userCategories;
-    List<Category> categoryList;
+    Set<String> userCategories;
+    List<String> categoryList;
     String user = "Valerio Tomassi";
 
     // newInstance constructor for creating fragment with arguments
@@ -70,9 +70,7 @@ public class CategoriesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Get the selected item text from ListView
-                String selectedItem = ((Category) parent.getItemAtPosition(position)).getName();
-
-                Toast.makeText(getContext(), "" + position + selectedItem, Toast.LENGTH_SHORT).show();
+                String selectedItem = (String) parent.getItemAtPosition(position);
 
                 Intent go = new Intent(getContext(), CategoryGalleryActivity.class);
                 go.putExtra("selectedCategory", selectedItem);
@@ -97,16 +95,16 @@ public class CategoriesFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 userCategories.clear();
-                categoryList.clear();
 
                 for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()){
 
                     Category category = categorySnapshot.getValue(Category.class);
 
-                    userCategories.add(category);
+                    userCategories.add(category.getName());
 
                 }
 
+                categoryList.clear();
                 categoryList.addAll(userCategories);
 
                 CategoryList adapter = new CategoryList(getActivity(), categoryList);

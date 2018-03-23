@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import static com.squareup.picasso.Callback.EmptyCallback;
 
 import java.util.ArrayList;
 
@@ -38,10 +39,21 @@ public class SimpleGridViewAdapter extends ArrayAdapter<String> {
 
         final ImageView photo = (ImageView) curView.findViewById(R.id.imageID);
 
-        Picasso.with(context)
-                .load(data.get(position))
-                .resize(100, 100)
-                .centerInside()
+
+
+        Picasso.with(context).load(data.get(position)).error(R.drawable.applogo)
+                .placeholder(R.drawable.applogo)
+                .into(photo, new EmptyCallback() {
+                    @Override public void onSuccess() {
+                        //to-do
+                    }
+                    @Override
+                    public void onError() {
+                        //to-do
+                    }
+                });
+
+        Picasso.with(context).load(data.get(position))
                 .into(photo);
 
 
