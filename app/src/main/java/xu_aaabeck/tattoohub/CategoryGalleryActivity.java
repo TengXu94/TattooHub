@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 
 import com.google.firebase.database.DataSnapshot;
@@ -21,18 +22,18 @@ import model.Category;
 
 public class CategoryGalleryActivity extends AppCompatActivity {
 
-    ArrayList<String> categoryPhotos;
-    GridView Grid;
-    SimpleGridViewAdapter adapter;
-    String user;
-    String categoryName;
+    private ArrayList<String> categoryPhotos;
+    private GridView Grid;
+    private SimpleGridViewAdapter adapter;
+    private String user;
+    private String categoryName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_gallery);
 
-
+        Toast.makeText(this, "Sto in CREATE", Toast.LENGTH_SHORT).show();
         Intent i = getIntent();
         categoryName = i.getStringExtra("selectedCategory");
         user = i.getStringExtra("user");
@@ -67,7 +68,7 @@ public class CategoryGalleryActivity extends AppCompatActivity {
 
         Grid = (GridView) findViewById(R.id.MyGrid);
         adapter = new SimpleGridViewAdapter(getApplicationContext(), 0, categoryPhotos);
-
+        adapter.notifyDataSetChanged();
         Grid.setAdapter(adapter);
 
         Grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -83,4 +84,40 @@ public class CategoryGalleryActivity extends AppCompatActivity {
         });
 
     }
+
+
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        Toast.makeText(this, "Sto in START", Toast.LENGTH_SHORT).show();
+    }
+
+
+
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        Toast.makeText(this, "Sto in PAUSA", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+
+        Toast.makeText(this, "M'HANNO STOPPATO", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        adapter.notifyDataSetChanged();
+        finish();
+    }
+
+
+
 }

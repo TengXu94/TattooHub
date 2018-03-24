@@ -39,6 +39,8 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationLi
         }
 
         Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         i.putExtra("access_token", access_token);
         startActivity(i);
 

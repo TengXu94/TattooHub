@@ -14,6 +14,7 @@
         <activity
             android:name=".SplashActivity"
             android:label="@string/login"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,14 +22,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".FaceDetectionActivity" />
-        <activity android:name=".FullImageActivity" />
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".HomeActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FaceDetectionActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FullImageActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".CategorySavePop"
-            android:theme="@style/AppTheme.SavePopTheme" />
-        <activity android:name=".CategoryGalleryActivity"></activity>
+            android:theme="@style/AppTheme.SavePopTheme"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".CategoryGalleryActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

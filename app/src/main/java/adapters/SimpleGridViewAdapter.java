@@ -40,7 +40,7 @@ public class SimpleGridViewAdapter extends ArrayAdapter<String> {
         final ImageView photo = (ImageView) curView.findViewById(R.id.imageID);
 
 
-
+        /*
         Picasso.with(context).load(data.get(position)).error(R.drawable.ic_error)
                 .placeholder(R.drawable.ic_load)
                 .fit().centerCrop()
@@ -53,7 +53,7 @@ public class SimpleGridViewAdapter extends ArrayAdapter<String> {
                         //to-do
                     }
                 });
-
+        */
         Picasso.with(context).load(data.get(position))
                 .fit().centerCrop()
                 .into(photo);

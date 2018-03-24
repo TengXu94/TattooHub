@@ -35,11 +35,11 @@ import xu_aaabeck.tattoohub.R;
 
 public class CategoriesFragment extends Fragment {
 
-    ListView listViewCategory;
-    DatabaseReference categoriesRef;
-    Set<String> userCategories;
-    List<String> categoryList;
-    String user = "Valerio Tomassi";
+    private ListView listViewCategory;
+    private DatabaseReference categoriesRef;
+    private Set<String> userCategories;
+    private List<String> categoryList;
+    private String user = "Valerio Tomassi";
 
     // newInstance constructor for creating fragment with arguments
     public static CategoriesFragment newInstance() {
@@ -66,18 +66,6 @@ public class CategoriesFragment extends Fragment {
 
         listViewCategory = (ListView) view.findViewById(R.id.categoriesListView);
 
-        listViewCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get the selected item text from ListView
-                String selectedItem = (String) parent.getItemAtPosition(position);
-
-                Intent go = new Intent(getContext(), CategoryGalleryActivity.class);
-                go.putExtra("selectedCategory", selectedItem);
-                go.putExtra("user", user);
-                startActivity(go);
-            }
-        });
 
 
         userCategories = new HashSet<>();
@@ -117,5 +105,27 @@ public class CategoriesFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Toast.makeText(getActivity(), "Sto in RESUME", Toast.LENGTH_SHORT).show();
+
+        listViewCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Get the selected item text from ListView
+                String selectedItem = (String) parent.getItemAtPosition(position);
+
+                Intent go = new Intent(getContext(), CategoryGalleryActivity.class).setFlags(
+                        Intent.FLAG_ACTIVITY_NEW_TASK |
+                                Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                go.putExtra("selectedCategory", selectedItem);
+                go.putExtra("user", user);
+                startActivity(go);
+            }
+        });
+
     }
 }

@@ -90,7 +90,7 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
     @Override
     public void processFinish(String result){
         Picasso.with(getContext())
-                .load(result)
+                .load(result).fit().centerCrop()
                 .into(my_photo);
     }
 
