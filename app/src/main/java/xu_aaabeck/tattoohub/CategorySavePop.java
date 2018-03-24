@@ -31,11 +31,11 @@ import model.Category;
 
 public class CategorySavePop extends Activity implements AdapterView.OnItemSelectedListener{
 
-    DatabaseReference categoriesRef;
-    Set<String> userCategories;
-    String username;
-    String photo;
-    Spinner spinner;
+    private DatabaseReference categoriesRef;
+    private Set<String> userCategories;
+    private String username;
+    private String photo;
+    private Spinner spinner;
 
 
     @Override
@@ -113,9 +113,10 @@ public class CategorySavePop extends Activity implements AdapterView.OnItemSelec
                 for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()){
 
                     Category category = categorySnapshot.getValue(Category.class);
-
-                    userCategories.add(category.getName());
-
+                    if(category.getName()!= null) {
+                        userCategories.add(category.getName());
+                    }
+                    else {userCategories.add("Porcoddio");}
                 }
 
                 ArrayList<String> tempCategories = new ArrayList<>();

@@ -112,35 +112,6 @@ public class HomeFragment extends Fragment {
 
     }
 
-    /*
-    @Override
-    public void onStart(){
-        super.onStart();
-
-        Toast.makeText(getActivity().getApplicationContext(), "Sto in START", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPause(){
-        super.onPause();
-
-        Toast.makeText(getActivity().getApplicationContext(), "Sto in PAUSA", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-
-        Toast.makeText(getActivity().getApplicationContext(), "M'HANNO STOPPATO", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-
-        Toast.makeText(getActivity().getApplicationContext(), "Sto in RESUME", Toast.LENGTH_SHORT).show();
-    }
-    */
 
     public void fetchData(String tag) {
         Call<InstagramResponse> call = RestClient.getRetrofitService().getTagPhotos(tag, access_token);
