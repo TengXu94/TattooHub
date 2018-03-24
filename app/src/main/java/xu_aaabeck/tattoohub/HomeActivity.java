@@ -25,7 +25,7 @@ public class HomeActivity extends FragmentActivity {
     }
 
     private void initUI() {
-        viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
+        viewPager = findViewById(R.id.vp_horizontal_ntb);
         fragmentsManager = new FragmentsManager(getSupportFragmentManager());
         viewPager.setAdapter(fragmentsManager);
 

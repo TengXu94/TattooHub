@@ -35,7 +35,7 @@
             android:theme="@style/AppTheme.SavePopTheme"
             android:screenOrientation="portrait"/>
         <activity android:name=".CategoryGalleryActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -34,55 +34,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("categories");
-
-        final Category category = new Category("tattoo brutti", "Valerio Tomassi", "https://www.gstatic.com/webp/gallery/1.jpg");
-
-
-        myRef.child(category.getId()).setValue(category);
-
-        lv = (ImageView) findViewById(R.id.lv);
-
-        Category category1;
-
-        myRef.orderByChild("id").equalTo("-2032392465").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
-                Category cat = dataSnapshot.getValue(Category.class);
-                System.out.println(dataSnapshot.getKey() + " was OOOOOOOOOOOOOOOOO" + cat.getUrl() + " meters tall.");
-
-                Picasso.with(getApplicationContext())
-                        .load(cat.getUrl())
-                        .resize(100, 100)
-                        .centerInside()
-                        .into(lv);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-
+        lv = findViewById(R.id.lv);
 
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.logo_transition);
         lv.startAnimation(anim);

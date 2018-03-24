@@ -20,7 +20,7 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        btn_get_access_token = (Button) findViewById(R.id.btn_get_access_token);
+        btn_get_access_token = findViewById(R.id.btn_get_access_token);
 
         btn_get_access_token.setOnClickListener(new View.OnClickListener() {
             @Override

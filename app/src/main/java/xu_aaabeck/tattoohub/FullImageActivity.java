@@ -19,7 +19,7 @@ public class FullImageActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.full_image_activity);
 
-        ImageView fullView = (ImageView) findViewById(R.id.full_photo);
+        ImageView fullView = findViewById(R.id.full_photo);
         Picasso.with(getApplicationContext())
                 .load(getIntent().getStringExtra("photo"))
                 .into(fullView);

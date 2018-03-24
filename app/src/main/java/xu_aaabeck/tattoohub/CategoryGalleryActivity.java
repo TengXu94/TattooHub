@@ -58,6 +58,8 @@ public class CategoryGalleryActivity extends AppCompatActivity {
                         categoryPhotos.add(category.getUrl());
                 }
 
+                adapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -66,7 +68,7 @@ public class CategoryGalleryActivity extends AppCompatActivity {
             }
         });
 
-        Grid = (GridView) findViewById(R.id.MyGrid);
+        Grid = findViewById(R.id.MyGrid);
         adapter = new SimpleGridViewAdapter(getApplicationContext(), 0, categoryPhotos);
         adapter.notifyDataSetChanged();
         Grid.setAdapter(adapter);
@@ -108,7 +110,7 @@ public class CategoryGalleryActivity extends AppCompatActivity {
         super.onStop();
 
         Toast.makeText(this, "M'HANNO STOPPATO", Toast.LENGTH_SHORT).show();
-        finish();
+        //finish();
     }
 
     @Override
@@ -117,7 +119,5 @@ public class CategoryGalleryActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         finish();
     }
-
-
 
 }

@@ -176,7 +176,8 @@ public class HomeFragment extends Fragment {
 
     public boolean filter(Object[] tags){
         HashSet<Object> tags_set = Sets.newHashSet(tags);
-        return tags_set.contains("tattoo");
+        //return tags_set.contains("tattoo");
+        return true;
     }
 
 }

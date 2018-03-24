@@ -12,9 +12,9 @@
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
         android:orientation="vertical"
+        tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"
-        tools:ignore="MissingConstraints">
+        tools:layout_editor_absoluteY="0dp">
 
         <TextView
             android:id="@+id/textView"
@@ -30,8 +30,7 @@
             android:layout_height="50dp"
             android:background="@color/colorPrimaryDark"
             tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="117dp"
-            />
+            tools:layout_editor_absoluteY="117dp" />
 
         <EditText
             android:id="@+id/newCategoryTextEdit"

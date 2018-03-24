@@ -31,11 +31,12 @@ import model.Category;
 
 public class CategorySavePop extends Activity implements AdapterView.OnItemSelectedListener{
 
-    DatabaseReference categoriesRef;
-    Set<String> userCategories;
-    String username;
-    String photo;
-    Spinner spinner;
+    private DatabaseReference categoriesRef;
+    private Set<String> userCategories;
+    private String username;
+    private String photo;
+    private Spinner spinner;
+    private ArrayList<String> tempCategories;
 
 
     @Override
@@ -47,7 +48,7 @@ public class CategorySavePop extends Activity implements AdapterView.OnItemSelec
         photo = getIntent().getStringExtra("photo");
         username = getIntent().getStringExtra("username");
 
-        spinner = (Spinner) findViewById(R.id.categoriesSpinner);
+        spinner = findViewById(R.id.categoriesSpinner);
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         categoriesRef = database.getReference("categories");
@@ -58,13 +59,14 @@ public class CategorySavePop extends Activity implements AdapterView.OnItemSelec
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int) (width * .8),(int) (height * .6));
+        getWindow().setLayout((int) (width * .8),(int) (height * .8));
 
+        tempCategories = new ArrayList<>();
         userCategories = new HashSet<>();
 
 
-        final EditText newCat = (EditText) findViewById(R.id.newCategoryTextEdit);
-        Button saveButton= (Button) findViewById(R.id.saveButton);
+        final EditText newCat = findViewById(R.id.newCategoryTextEdit);
+        Button saveButton= findViewById(R.id.saveButton);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,11 +116,11 @@ public class CategorySavePop extends Activity implements AdapterView.OnItemSelec
 
                     Category category = categorySnapshot.getValue(Category.class);
 
-                    userCategories.add(category.getName());
+                    if(category != null)
+                        userCategories.add(category.getName());
 
                 }
 
-                ArrayList<String> tempCategories = new ArrayList<>();
                 tempCategories.addAll(userCategories);
                 tempCategories.add(0, getString(R.string.newCategory));
 
@@ -142,11 +144,9 @@ public class CategorySavePop extends Activity implements AdapterView.OnItemSelec
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
     }
 }
