@@ -65,12 +65,8 @@ public class CategoriesFragment extends Fragment {
         View view = inflater.inflate(R.layout.categories_fragment, container, false);
 
         listViewCategory = (ListView) view.findViewById(R.id.categoriesListView);
-
-
-
         userCategories = new HashSet<>();
         categoryList = new ArrayList<>();
-
         return view;
     }
 

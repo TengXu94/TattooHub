@@ -22,7 +22,7 @@ import model.Category;
 
 public class CategoryGalleryActivity extends AppCompatActivity {
 
-    private ArrayList<String> categoryPhotos;
+    private ArrayList<String> categoryPhotos = new ArrayList<>();
     private GridView Grid;
     private SimpleGridViewAdapter adapter;
     private String user;
@@ -38,12 +38,9 @@ public class CategoryGalleryActivity extends AppCompatActivity {
         categoryName = i.getStringExtra("selectedCategory");
         user = i.getStringExtra("user");
 
-
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference categoriesRef = database.getReference("categories");
-
-        categoryPhotos = new ArrayList<>();
 
         categoriesRef.orderByChild("composite_id").equalTo(String.valueOf((user + categoryName).hashCode()))
                 .addValueEventListener(new ValueEventListener() {
@@ -73,17 +70,17 @@ public class CategoryGalleryActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         Grid.setAdapter(adapter);
 
-        Grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                final Object[] images = categoryPhotos.toArray();
-
-                Intent go = new Intent(getApplicationContext(), FullImageActivity.class);
-                go.putExtra("photo", (String) images[position]);
-                //By position Clicked
-                startActivity(go);
-            }
-        });
+//        Grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+//                final Object[] images = categoryPhotos.toArray();
+//
+//                Intent go = new Intent(getApplicationContext(), FullImageActivity.class);
+//                go.putExtra("photo", (String) images[position]);
+//                //By position Clicked
+//                startActivity(go);
+//            }
+//        });
 
     }
 
@@ -94,9 +91,6 @@ public class CategoryGalleryActivity extends AppCompatActivity {
 
         Toast.makeText(this, "Sto in START", Toast.LENGTH_SHORT).show();
     }
-
-
-
 
     @Override
     public void onPause(){
