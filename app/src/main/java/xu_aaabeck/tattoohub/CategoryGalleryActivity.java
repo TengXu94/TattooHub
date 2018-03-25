@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 
 import com.google.firebase.database.DataSnapshot;
@@ -33,7 +32,6 @@ public class CategoryGalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_gallery);
 
-        Toast.makeText(this, "Sto in CREATE", Toast.LENGTH_SHORT).show();
         Intent i = getIntent();
         categoryName = i.getStringExtra("selectedCategory");
         user = i.getStringExtra("user");
@@ -70,17 +68,17 @@ public class CategoryGalleryActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         Grid.setAdapter(adapter);
 
-//        Grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-//                final Object[] images = categoryPhotos.toArray();
-//
-//                Intent go = new Intent(getApplicationContext(), FullImageActivity.class);
-//                go.putExtra("photo", (String) images[position]);
-//                //By position Clicked
-//                startActivity(go);
-//            }
-//        });
+        Grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                final Object[] images = categoryPhotos.toArray();
+
+                Intent go = new Intent(getApplicationContext(), FullImageActivity.class);
+                go.putExtra("photo", (String) images[position]);
+              //By position Clicked
+               startActivity(go);
+           }
+        });
 
     }
 
@@ -88,22 +86,16 @@ public class CategoryGalleryActivity extends AppCompatActivity {
     @Override
     public void onStart(){
         super.onStart();
-
-        Toast.makeText(this, "Sto in START", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onPause(){
         super.onPause();
-
-        Toast.makeText(this, "Sto in PAUSA", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onStop(){
         super.onStop();
-
-        Toast.makeText(this, "M'HANNO STOPPATO", Toast.LENGTH_SHORT).show();
         //finish();
     }
 
