@@ -2,6 +2,7 @@ package fragments;
 
 
 import adapters.CategoryList;
+import interfaces.AsyncResponse;
 import model.Category;
 
 import android.content.Intent;
@@ -19,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import tasks.GetUserSelfInfoTask;
 import xu_aaabeck.tattoohub.CategoryGalleryActivity;
 import xu_aaabeck.tattoohub.R;
 
@@ -33,13 +36,15 @@ import xu_aaabeck.tattoohub.R;
  * Created by root on 15.03.18.
  */
 
-public class CategoriesFragment extends Fragment {
+public class CategoriesFragment extends Fragment implements AsyncResponse{
 
     private ListView listViewCategory;
     private DatabaseReference categoriesRef;
     private Set<String> userCategories;
     private List<String> categoryList;
     private String user = "Valerio Tomassi";
+    private String access_token;
+
 
     // newInstance constructor for creating fragment with arguments
     public static CategoriesFragment newInstance() {
@@ -53,6 +58,10 @@ public class CategoriesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent i = getActivity().getIntent();
+        access_token = i.getStringExtra("access_token");
+        new GetUserSelfInfoTask(this,"username").execute(access_token);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         categoriesRef = database.getReference("categories");
@@ -68,6 +77,7 @@ public class CategoriesFragment extends Fragment {
         userCategories = new HashSet<>();
         return view;
     }
+
 
     @Override
     public void onStart() {
@@ -123,5 +133,11 @@ public class CategoriesFragment extends Fragment {
             }
         });
 
+    }
+
+
+    @Override
+    public void processFinish(String result){
+        this.user = result;
     }
 }

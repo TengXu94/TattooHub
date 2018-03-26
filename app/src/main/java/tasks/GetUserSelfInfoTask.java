@@ -21,13 +21,15 @@ import interfaces.AsyncResponse;
  * Created by root on 20.03.18.
  */
 
-public class GetUserInfoTask extends AsyncTask<String, Void, String> {
+public class GetUserSelfInfoTask extends AsyncTask<String, Void, String> {
 
 
+    private static final String GET_SELF_URL = "https://api.instagram.com/v1/users/self/?access_token=";
     public AsyncResponse delegate = null;
+    private String info;
 
-
-    public GetUserInfoTask(AsyncResponse delegate) {
+    public GetUserSelfInfoTask(AsyncResponse delegate, String infoNeeded) {
+        this.info = infoNeeded;
         this.delegate = delegate;
     }
 
@@ -35,7 +37,7 @@ public class GetUserInfoTask extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... strings) {
         String result = "UNDEFINED";
         try {
-            URL url = new URL(strings[0]);
+            URL url = new URL(GET_SELF_URL+strings[0]);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
             InputStream stream = new BufferedInputStream(urlConnection.getInputStream());
@@ -49,7 +51,7 @@ public class GetUserInfoTask extends AsyncTask<String, Void, String> {
 
             JSONObject topLevel = new JSONObject(builder.toString());
             JSONObject main = topLevel.getJSONObject("data");
-            result = String.valueOf(main.getString("profile_picture"));
+            result = String.valueOf(main.getString(info));
 
             urlConnection.disconnect();
         } catch (IOException | JSONException e) {
