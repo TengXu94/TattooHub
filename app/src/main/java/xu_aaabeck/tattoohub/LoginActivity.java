@@ -8,13 +8,17 @@ import android.view.View;
 import android.widget.Button;
 
 import classes.AuthenticationDialog;
+import classes.Constants;
+import interfaces.AsyncResponse;
 import interfaces.AuthenticationListener;
+import tasks.GetUserSelfInfoTask;
 
-public class LoginActivity extends AppCompatActivity implements AuthenticationListener{
+public class LoginActivity extends AppCompatActivity implements AuthenticationListener, AsyncResponse{
 
     private AuthenticationDialog auth_dialog;
     private Button btn_get_access_token;
-
+    public String username;
+    private String access_token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,12 +41,22 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationLi
         if (access_token == null) {
             auth_dialog.dismiss();
         }
+        this.access_token = access_token;
+        new GetUserSelfInfoTask(this,"username").execute(access_token);
 
+
+    }
+
+    @Override
+    public void processFinish(String result){
+
+        this.username = String.valueOf(result.hashCode());
+        ((Constants)this.getApplication()).setUsername(this.username);
         Intent i = new Intent(LoginActivity.this, HomeActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         i.putExtra("access_token", access_token);
         startActivity(i);
-
     }
+
 }

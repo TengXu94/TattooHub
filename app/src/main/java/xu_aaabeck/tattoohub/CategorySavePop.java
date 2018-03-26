@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import classes.Constants;
 import model.Category;
 
 /**
@@ -46,8 +47,8 @@ public class CategorySavePop extends Activity implements AdapterView.OnItemSelec
         setContentView(R.layout.category_save_pop);
 
         photo = getIntent().getStringExtra("photo");
-        username = getIntent().getStringExtra("username");
-
+        username = ((Constants)getApplication()).getUsername();
+        System.out.println("DIOPORCO \t" + username);
         spinner = findViewById(R.id.categoriesSpinner);
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();

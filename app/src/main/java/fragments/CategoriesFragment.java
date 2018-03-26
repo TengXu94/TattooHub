@@ -2,6 +2,7 @@ package fragments;
 
 
 import adapters.CategoryList;
+import classes.Constants;
 import interfaces.AsyncResponse;
 import model.Category;
 
@@ -36,14 +37,13 @@ import xu_aaabeck.tattoohub.R;
  * Created by root on 15.03.18.
  */
 
-public class CategoriesFragment extends Fragment implements AsyncResponse{
+public class CategoriesFragment extends Fragment{
 
     private ListView listViewCategory;
     private DatabaseReference categoriesRef;
     private Set<String> userCategories;
     private List<String> categoryList;
-    private String user = "Valerio Tomassi";
-    private String access_token;
+    private String username;
 
 
     // newInstance constructor for creating fragment with arguments
@@ -58,10 +58,7 @@ public class CategoriesFragment extends Fragment implements AsyncResponse{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Intent i = getActivity().getIntent();
-        access_token = i.getStringExtra("access_token");
-        new GetUserSelfInfoTask(this,"username").execute(access_token);
+        this.username = ((Constants)getActivity().getApplication()).getUsername();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         categoriesRef = database.getReference("categories");
@@ -83,7 +80,7 @@ public class CategoriesFragment extends Fragment implements AsyncResponse{
     public void onStart() {
         super.onStart();
 
-        categoriesRef.child(user).addValueEventListener(new ValueEventListener() {
+        categoriesRef.child(username).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -128,7 +125,6 @@ public class CategoriesFragment extends Fragment implements AsyncResponse{
                         Intent.FLAG_ACTIVITY_NEW_TASK |
                                 Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 go.putExtra("selectedCategory", selectedItem);
-                go.putExtra("user", user);
                 startActivity(go);
             }
         });
@@ -136,8 +132,4 @@ public class CategoriesFragment extends Fragment implements AsyncResponse{
     }
 
 
-    @Override
-    public void processFinish(String result){
-        this.user = result;
-    }
 }

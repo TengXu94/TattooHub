@@ -16,6 +16,7 @@ public class HomeActivity extends FragmentActivity {
     private ViewPager viewPager;
     private FragmentsManager fragmentsManager;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,4 +101,5 @@ public class HomeActivity extends FragmentActivity {
             }
         }, 500);
     }
+    
 }

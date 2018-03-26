@@ -1,5 +1,6 @@
 package adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -62,9 +63,8 @@ public class SimpleListViewAdapter extends ArrayAdapter<Data> {
                 Toast.makeText(context, "Long Click", Toast.LENGTH_SHORT).show();
 
                 Intent i = new Intent(context, CategorySavePop.class);
-
+                Activity activity = (Activity)context;
                 i.putExtra("photo", data.get(position).getImages().getStandard_resolution().getUrl());
-                i.putExtra("username", data.get(position).getUser().getFull_name());
 
                 context.startActivity(i);
 
