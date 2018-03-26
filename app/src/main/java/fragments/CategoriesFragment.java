@@ -66,7 +66,6 @@ public class CategoriesFragment extends Fragment {
 
         listViewCategory = (ListView) view.findViewById(R.id.categoriesListView);
         userCategories = new HashSet<>();
-        categoryList = new ArrayList<>();
         return view;
     }
 
@@ -74,17 +73,19 @@ public class CategoriesFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        categoriesRef.orderByChild("user").equalTo(user).addValueEventListener(new ValueEventListener() {
+        categoriesRef.child(user).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
+                categoryList = new ArrayList<>();
 
                 userCategories.clear();
 
                 for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()){
 
-                    Category category = categorySnapshot.getValue(Category.class);
+                    String categoryName = categorySnapshot.getKey();
 
-                    userCategories.add(category.getName());
+                    userCategories.add(categoryName);
 
                 }
 
@@ -106,7 +107,6 @@ public class CategoriesFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        Toast.makeText(getActivity(), "Sto in RESUME", Toast.LENGTH_SHORT).show();
 
         listViewCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

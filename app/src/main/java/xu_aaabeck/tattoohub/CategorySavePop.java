@@ -72,6 +72,8 @@ public class CategorySavePop extends Activity implements AdapterView.OnItemSelec
             @Override
             public void onClick(View v) {
 
+                Category category = new Category();
+
                 String selectedCategory = (String) spinner.getSelectedItem();
 
                 if(selectedCategory.equals(getString(R.string.newCategory))) {
@@ -83,18 +85,22 @@ public class CategorySavePop extends Activity implements AdapterView.OnItemSelec
                         Toast.makeText(getApplicationContext(), "Specify a New Category", Toast.LENGTH_SHORT).show();
                     else {
 
-                        final Category category = new Category(newCategory, username, photo);
+                        category = new Category(newCategory, username, photo);
 
-                        categoriesRef.child(category.getId()).setValue(category);
                     }
                 }
 
                 else {
 
-                    final Category category = new Category(selectedCategory, username, photo);
+                    category = new Category(selectedCategory, username, photo);
 
-                    categoriesRef.child(category.getId()).setValue(category);
                 }
+
+                categoriesRef.child(username).child(category.getName()).child(category.getId()).setValue(category);
+
+                Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+
+                CategorySavePop.super.onBackPressed();
 
 
             }
@@ -106,7 +112,7 @@ public class CategorySavePop extends Activity implements AdapterView.OnItemSelec
     public void onStart() {
         super.onStart();
 
-        categoriesRef.orderByChild("user").equalTo(username).addValueEventListener(new ValueEventListener() {
+        categoriesRef.child(username).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -114,12 +120,14 @@ public class CategorySavePop extends Activity implements AdapterView.OnItemSelec
 
                 for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()){
 
-                    Category category = categorySnapshot.getValue(Category.class);
+                    String categoryName = categorySnapshot.getKey();
 
-                    if(category != null)
-                        userCategories.add(category.getName());
+                    if(categoryName != null)
+                        userCategories.add(categoryName);
 
                 }
+
+                tempCategories.clear();
 
                 tempCategories.addAll(userCategories);
                 tempCategories.add(0, getString(R.string.newCategory));

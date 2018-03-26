@@ -40,7 +40,7 @@ public class CategoryGalleryActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference categoriesRef = database.getReference("categories");
 
-        categoriesRef.orderByChild("composite_id").equalTo(String.valueOf((user + categoryName).hashCode()))
+        categoriesRef.child(user).child(categoryName)
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -59,6 +59,8 @@ public class CategoryGalleryActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
+                adapter.notifyDataSetChanged();
 
             }
         });
