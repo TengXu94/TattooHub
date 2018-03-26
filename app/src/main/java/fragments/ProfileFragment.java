@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import interfaces.AsyncResponse;
-import tasks.GetUserPhotoTask;
 import tasks.GetUserSelfInfoTask;
 import xu_aaabeck.tattoohub.LoginActivity;
 import xu_aaabeck.tattoohub.R;
