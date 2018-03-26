@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,29 +21,33 @@ import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import adapters.UrlListViewAdapter;
 import classes.Data;
 import classes.InstagramResponse;
 import classes.RestClient;
-import adapters.SimpleListViewAdapter;
+import interfaces.AsyncResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import tasks.GoogleCustomSearchTask;
 import xu_aaabeck.tattoohub.R;
 
 /**
  * Created by root on 15.03.18.
  */
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements AsyncResponse{
 
+    private static final String start_index ="&start=";
+    private int default_index;
     private EditText etSearch;
     private ListView lvFeed;
-    int count = 0;
-
-    private boolean hasFocus;
-    private SimpleListViewAdapter lvAdapter;
+    private String query;
+    private UrlListViewAdapter lvAdapter;
     private ArrayList<Data> data = new ArrayList<>();
     private View view;
+    private String[] urls;
+    private ArrayList<String> datas = new ArrayList<>();
     private String access_token = "";
 
     public static HomeFragment newInstance() {
@@ -55,7 +60,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        default_index = 1;
     }
 
 
@@ -76,8 +81,10 @@ public class HomeFragment extends Fragment {
         lvFeed = (ListView) view.findViewById(R.id.lv_feed);
         etSearch = (EditText) view.findViewById(R.id.et_search);
 
-        lvAdapter = new SimpleListViewAdapter(getActivity(), 0, data);
+        lvAdapter= new UrlListViewAdapter(getActivity(),0,datas);
+        //lvAdapter = new SimpleListViewAdapter(getActivity(), 0, data);
         lvFeed.setAdapter(lvAdapter);
+
         return view;
     }
 
@@ -94,9 +101,10 @@ public class HomeFragment extends Fragment {
                         Toast.makeText(getActivity().getApplicationContext(), "Enter a search tag", Toast.LENGTH_SHORT).show();
 
                     } else {
-
+                        query = etSearch.getText().toString();
                         lvAdapter.clearListView();
-                        fetchData(etSearch.getText().toString());
+                        new GoogleCustomSearchTask(HomeFragment.this).execute(query);
+                        //fetchData(etSearch.getText().toString());
                         etSearch.setText("");
                         etSearch.clearFocus();
                     }
@@ -110,6 +118,29 @@ public class HomeFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        lvFeed.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
+                        && (lvFeed.getLastVisiblePosition() - lvFeed.getHeaderViewsCount() -
+                        lvFeed.getFooterViewsCount()) >= (lvAdapter.getCount() - 1)) {
+                        default_index = default_index +10;
+                        new GoogleCustomSearchTask(HomeFragment.this).execute(query+start_index+String.valueOf(default_index));
+
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
     }
 
 
@@ -140,9 +171,17 @@ public class HomeFragment extends Fragment {
             public void onFailure(Call<InstagramResponse> call, Throwable t) {
                 //Handle failure
                 Toast.makeText(getActivity().getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
-                System.out.println(t);
             }
         });
+    }
+
+    @Override
+    public void processFinish(String result){
+       this.urls = result.split(" ");
+       for (int i = 0; i < urls.length; i++){
+           datas.add(urls[i]);
+       }
+       lvAdapter.notifyDataSetChanged();
     }
 
     public boolean filter(Object[] tags){

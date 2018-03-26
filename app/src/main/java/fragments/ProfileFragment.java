@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 
 import interfaces.AsyncResponse;
 import tasks.GetUserSelfInfoTask;
+import tasks.GoogleCustomSearchTask;
 import xu_aaabeck.tattoohub.LoginActivity;
 import xu_aaabeck.tattoohub.R;
 
@@ -89,7 +90,7 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
     @Override
     public void processFinish(String result){
         Picasso.with(getContext())
-                .load(result).fit().centerCrop()
+                .load(result).fit()
                 .into(my_photo);
     }
 
