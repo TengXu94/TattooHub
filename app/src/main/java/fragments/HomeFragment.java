@@ -2,7 +2,12 @@ package fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -12,12 +17,14 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.collect.Sets;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -50,6 +57,7 @@ public class HomeFragment extends Fragment implements AsyncResponse{
     private ArrayList<String> datas = new ArrayList<>();
     private String access_token = "";
 
+
     public static HomeFragment newInstance() {
         HomeFragment fragmentFirst = new HomeFragment();
         Bundle args = new Bundle();
@@ -61,7 +69,10 @@ public class HomeFragment extends Fragment implements AsyncResponse{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         default_index = 1;
+
     }
+
+
 
 
     @Override
@@ -101,7 +112,7 @@ public class HomeFragment extends Fragment implements AsyncResponse{
                         Toast.makeText(getActivity().getApplicationContext(), "Enter a search tag", Toast.LENGTH_SHORT).show();
 
                     } else {
-                        query = etSearch.getText().toString();
+                        query = etSearch.getText().toString().replace(" ", "+");
                         lvAdapter.clearListView();
                         new GoogleCustomSearchTask(HomeFragment.this).execute(query);
                         //fetchData(etSearch.getText().toString());

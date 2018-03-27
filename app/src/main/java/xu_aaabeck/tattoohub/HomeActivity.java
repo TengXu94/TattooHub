@@ -1,9 +1,12 @@
 package xu_aaabeck.tattoohub;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -15,6 +18,8 @@ public class HomeActivity extends FragmentActivity {
 
     private ViewPager viewPager;
     private FragmentsManager fragmentsManager;
+    private static int RESULT_LOAD_IMAGE = 1;
+
 
 
     @Override
@@ -23,6 +28,27 @@ public class HomeActivity extends FragmentActivity {
         setContentView(R.layout.home_bar_fragment);
 
         initUI();
+
+        Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, RESULT_LOAD_IMAGE);
+
+
+        //************************
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            Toast.makeText(this.getApplicationContext(), "No results found" + selectedImage.toString(), Toast.LENGTH_SHORT).show();
+
+        }
+        Uri selectedImage = data.getData();
+        Toast.makeText(this.getApplicationContext(), "OK" + selectedImage.toString(), Toast.LENGTH_SHORT).show();
+
     }
 
     private void initUI() {
