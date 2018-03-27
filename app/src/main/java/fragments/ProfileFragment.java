@@ -19,7 +19,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import interfaces.AsyncResponse;
-import tasks.GetUserInfoTask;
+import tasks.GetUserSelfInfoTask;
+import tasks.GoogleCustomSearchTask;
 import xu_aaabeck.tattoohub.LoginActivity;
 import xu_aaabeck.tattoohub.R;
 
@@ -32,7 +33,6 @@ import static android.content.ContentValues.TAG;
 public class ProfileFragment extends Fragment implements AsyncResponse {
 
     private String access_token;
-    private static final String GET_SELF_URL = "https://api.instagram.com/v1/users/self/?access_token=";
     private ImageView my_photo;
     private TextView logout;
     public static ProfileFragment newInstance() {
@@ -49,7 +49,7 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
         super.onCreate(savedInstanceState);
         Intent i = getActivity().getIntent();
         access_token = i.getStringExtra("access_token");
-        new GetUserInfoTask(this).execute(GET_SELF_URL+access_token);
+        new GetUserSelfInfoTask(this,"profile_picture").execute(access_token);
     }
 
     // Inflate the view for the fragment based on layout XML
@@ -90,7 +90,7 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
     @Override
     public void processFinish(String result){
         Picasso.with(getContext())
-                .load(result).fit().centerCrop()
+                .load(result).fit()
                 .into(my_photo);
     }
 

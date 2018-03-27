@@ -17,6 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import adapters.SimpleGridViewAdapter;
+import classes.Constants;
 import model.Category;
 
 public class CategoryGalleryActivity extends AppCompatActivity {
@@ -24,7 +25,7 @@ public class CategoryGalleryActivity extends AppCompatActivity {
     private ArrayList<String> categoryPhotos = new ArrayList<>();
     private GridView Grid;
     private SimpleGridViewAdapter adapter;
-    private String user;
+    private String username;
     private String categoryName;
 
     @Override
@@ -34,13 +35,13 @@ public class CategoryGalleryActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         categoryName = i.getStringExtra("selectedCategory");
-        user = i.getStringExtra("user");
+        username = ((Constants)getApplication()).getUsername();
 
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference categoriesRef = database.getReference("categories");
 
-        categoriesRef.child(user).child(categoryName)
+        categoriesRef.child(username).child(categoryName)
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

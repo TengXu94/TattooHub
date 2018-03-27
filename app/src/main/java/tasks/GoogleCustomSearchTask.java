@@ -1,9 +1,8 @@
 package tasks;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,27 +14,25 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import classes.Constants;
 import interfaces.AsyncResponse;
 
-/**
- * Created by root on 20.03.18.
- */
-
-public class GetUserInfoTask extends AsyncTask<String, Void, String> {
+public class GoogleCustomSearchTask  extends AsyncTask<String, Void, String> {
 
 
+    private static final String google = Constants.google_api;
     public AsyncResponse delegate = null;
+    private String info;
 
-
-    public GetUserInfoTask(AsyncResponse delegate) {
+    public GoogleCustomSearchTask(AsyncResponse delegate) {
         this.delegate = delegate;
     }
 
     @Override
     protected String doInBackground(String... strings) {
-        String result = "UNDEFINED";
+        String result = "";
         try {
-            URL url = new URL(strings[0]);
+            URL url = new URL(google+strings[0]);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
             InputStream stream = new BufferedInputStream(urlConnection.getInputStream());
@@ -48,9 +45,10 @@ public class GetUserInfoTask extends AsyncTask<String, Void, String> {
             }
 
             JSONObject topLevel = new JSONObject(builder.toString());
-            JSONObject main = topLevel.getJSONObject("data");
-            result = String.valueOf(main.getString("profile_picture"));
-
+            JSONArray main = topLevel.getJSONArray("items");
+            for (int i=0; i < main.length();i++) {
+                result = main.getJSONObject(i).getString("link")+ ","+main.getJSONObject(i).getString("displayLink")+ " " + result;
+            }
             urlConnection.disconnect();
         } catch (IOException | JSONException e) {
             e.printStackTrace();

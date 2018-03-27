@@ -11,24 +11,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import classes.Data;
 import xu_aaabeck.tattoohub.CategorySavePop;
 import xu_aaabeck.tattoohub.FullImageActivity;
 import xu_aaabeck.tattoohub.R;
 
-/**
- * Created by root on 08.03.18.
- */
-
-public class SimpleListViewAdapter extends ArrayAdapter<Data> {
+public class UrlListViewAdapter extends ArrayAdapter<String> {
 
     private Context context;
-    private ArrayList<Data> data;
+    private ArrayList<String> data;
+    private String url;
+    private String owner;
 
-    public SimpleListViewAdapter(Context context, int textViewResourceId, ArrayList<Data> objects) {
+    public UrlListViewAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
         super(context, textViewResourceId, objects);
         this.context = context;
         this.data = objects;
@@ -41,20 +40,14 @@ public class SimpleListViewAdapter extends ArrayAdapter<Data> {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             curView = vi.inflate(R.layout.feed_list_view_item, null);
         }
+        url = data.get(position).split(",")[0];
 
+        owner = data.get(position).split(",")[1];
         TextView tv_user_fullname = (TextView) curView.findViewById(R.id.tv_user_fullname);
         final ImageView iv_photo = (ImageView) curView.findViewById(R.id.iv_photo);
-        ImageView iv_profile = (ImageView) curView.findViewById(R.id.iv_profile);
 
-        tv_user_fullname.setText(data.get(position).getUser().getFull_name());
+        tv_user_fullname.setText(owner);
 
-        iv_profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show();
-
-            }
-        });
 
         iv_photo.setOnLongClickListener(new View.OnLongClickListener() {
 
@@ -64,7 +57,7 @@ public class SimpleListViewAdapter extends ArrayAdapter<Data> {
 
                 Intent i = new Intent(context, CategorySavePop.class);
                 Activity activity = (Activity)context;
-                i.putExtra("photo", data.get(position).getImages().getStandard_resolution().getUrl());
+                i.putExtra("photo", url);
 
                 context.startActivity(i);
 
@@ -77,7 +70,7 @@ public class SimpleListViewAdapter extends ArrayAdapter<Data> {
             public void onClick(View v) {
                 Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(context, FullImageActivity.class);
-                i.putExtra("photo", data.get(position).getImages().getStandard_resolution().getUrl());
+                i.putExtra("photo", url);
                 context.startActivity(i);
             }
         });
@@ -85,12 +78,7 @@ public class SimpleListViewAdapter extends ArrayAdapter<Data> {
 
 
         Picasso.with(context)
-                .load(data.get(position).getUser().getProfile_picture())
-                .resize(100, 100)
-                .centerInside()
-                .into(iv_profile);
-        Picasso.with(context)
-                .load(data.get(position).getImages().getStandard_resolution().getUrl())
+                .load(url).fit()
                 .into(iv_photo);
 
         return curView;
