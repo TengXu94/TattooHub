@@ -50,8 +50,9 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationLi
     @Override
     public void processFinish(String result){
 
-        this.username = String.valueOf(result.hashCode());
-        ((Constants)this.getApplication()).setUsername(this.username);
+        this.username = String.valueOf(result);
+        ((Constants)this.getApplication()).setUsername(String.valueOf(this.username.hashCode()));
+        ((Constants)this.getApplication()).setHash(this.username);
         Intent i = new Intent(LoginActivity.this, HomeActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

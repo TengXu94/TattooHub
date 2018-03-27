@@ -13,23 +13,7 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/file"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:layout_margin="16dp"
-        android:layout_toTopOf="@id/ntb_horizontal"
-        android:src="@drawable/ic_error" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toTopOf="@id/ntb_horizontal"
-        android:layout_gravity="right|bottom"
-        android:src="@drawable/ic_account_box_black_24dp"
-        android:layout_margin="16dp" />
 
     <devlight.io.library.ntb.NavigationTabBar
         android:id="@+id/ntb_horizontal"
@@ -45,3 +29,4 @@
         app:ntb_titled="true" />
 
 </LinearLayout>
+

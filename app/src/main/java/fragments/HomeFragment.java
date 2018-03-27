@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -39,6 +40,8 @@ import retrofit2.Response;
 import tasks.GoogleCustomSearchTask;
 import xu_aaabeck.tattoohub.R;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by root on 15.03.18.
  */
@@ -57,6 +60,9 @@ public class HomeFragment extends Fragment implements AsyncResponse{
     private ArrayList<String> datas = new ArrayList<>();
     private String access_token = "";
 
+    private static int CAMERA_RESULT_LOAD_IMAGE = 0;
+    private static int GALLERY_RESULT_LOAD_IMAGE = 1;
+
 
     public static HomeFragment newInstance() {
         HomeFragment fragmentFirst = new HomeFragment();
@@ -69,7 +75,6 @@ public class HomeFragment extends Fragment implements AsyncResponse{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         default_index = 1;
-
     }
 
 
@@ -95,6 +100,36 @@ public class HomeFragment extends Fragment implements AsyncResponse{
         lvAdapter= new UrlListViewAdapter(getActivity(),0,datas);
         //lvAdapter = new SimpleListViewAdapter(getActivity(), 0, data);
         lvFeed.setAdapter(lvAdapter);
+
+
+
+
+        FloatingActionButton galleryBtn = view.findViewById(R.id.file);
+        FloatingActionButton cameraBtn = view.findViewById(R.id.camera);
+
+        cameraBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(i , CAMERA_RESULT_LOAD_IMAGE);
+            }
+        });
+
+
+        galleryBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, GALLERY_RESULT_LOAD_IMAGE);
+            }
+        });
+
+
+
+
+
+
+
+
 
         return view;
     }
@@ -197,8 +232,89 @@ public class HomeFragment extends Fragment implements AsyncResponse{
 
     public boolean filter(Object[] tags){
         HashSet<Object> tags_set = Sets.newHashSet(tags);
-        //return tags_set.contains("tattoo");
         return true;
     }
+
+
+    // Floating Buttons support methods
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if(requestCode == CAMERA_RESULT_LOAD_IMAGE){
+            if (data != null) {
+
+                String[] projection = {MediaStore.Images.Media.DATA};
+                Cursor cursor = getActivity().getContentResolver().query(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        projection, null, null, null);
+                int column_index_data = cursor
+                        .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToLast();
+
+                String imagePath = cursor.getString(column_index_data);
+                shareIntagramIntent("file://" + imagePath);
+
+            }
+        }
+        if(requestCode == GALLERY_RESULT_LOAD_IMAGE){
+
+            Uri selectedImage = null;
+
+            if (resultCode == RESULT_OK && null != data) {
+                selectedImage = data.getData();
+                shareIntagramIntent("file://" + getRealPathFromURI(selectedImage));
+
+            }
+        }
+
+
+    }
+
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = getActivity().getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
+    }
+
+    private void shareIntagramIntent(String path) {
+        Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage("com.instagram.android");
+        if (intent != null) {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.setPackage("com.instagram.android");
+            try {
+                shareIntent.putExtra(Intent.EXTRA_STREAM,
+                        Uri.parse(path));
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            shareIntent.setType("image/*");
+
+            startActivity(shareIntent);
+        } else {
+            // bring user to the market to download the app.
+            // or let them choose an app?
+            intent = new Intent(Intent.ACTION_VIEW);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setData(Uri.parse("market://details?id="
+                    + "com.instagram.android"));
+            startActivity(intent);
+        }
+    }
+
+
 
 }

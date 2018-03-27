@@ -1,13 +1,23 @@
 package xu_aaabeck.tattoohub;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import adapters.FragmentsManager;
@@ -18,7 +28,7 @@ public class HomeActivity extends FragmentActivity {
 
     private ViewPager viewPager;
     private FragmentsManager fragmentsManager;
-    private static int RESULT_LOAD_IMAGE = 1;
+
 
 
 
@@ -28,26 +38,6 @@ public class HomeActivity extends FragmentActivity {
         setContentView(R.layout.home_bar_fragment);
 
         initUI();
-
-        Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, RESULT_LOAD_IMAGE);
-
-
-        //************************
-
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            Toast.makeText(this.getApplicationContext(), "No results found" + selectedImage.toString(), Toast.LENGTH_SHORT).show();
-
-        }
-        Uri selectedImage = data.getData();
-        Toast.makeText(this.getApplicationContext(), "OK" + selectedImage.toString(), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -67,7 +57,6 @@ public class HomeActivity extends FragmentActivity {
                         Color.parseColor(colors[0]))
                         .selectedIcon(getResources().getDrawable(R.drawable.ic_sixth))
                         .title("My Profile")
-                        .badgeTitle("NTB")
                         .build()
         );
         models.add(
@@ -76,7 +65,6 @@ public class HomeActivity extends FragmentActivity {
                         Color.parseColor(colors[1]))
                         .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
                         .title("Home")
-                        .badgeTitle("with")
                         .build()
         );
         models.add(
@@ -85,7 +73,6 @@ public class HomeActivity extends FragmentActivity {
                         Color.parseColor(colors[2]))
                         .selectedIcon(getResources().getDrawable(R.drawable.ic_seventh))
                         .title("My Images")
-                        .badgeTitle("state")
                         .build()
         );
         navigationTabBar.setModels(models);

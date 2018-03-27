@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import classes.Constants;
 import interfaces.AsyncResponse;
 import tasks.GetUserSelfInfoTask;
 import tasks.GoogleCustomSearchTask;
@@ -35,6 +37,10 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
     private String access_token;
     private ImageView my_photo;
     private TextView logout;
+    private TextView profile;
+    private TextView help;
+
+
     public static ProfileFragment newInstance() {
         ProfileFragment fragmentFirst = new ProfileFragment();
         Bundle args = new Bundle();
@@ -84,6 +90,18 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
                         .setNegativeButton("No", dialogClickListener).show();
             }
         });
+        profile = view.findViewById(R.id.profileName);
+        profile.setText(((Constants)getActivity().getApplication()).getHash());
+
+        help = view.findViewById(R.id.help);
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/TengXu94/TattooHub"));
+                startActivity(browserIntent);
+            }
+        });
+
         return view;
     }
 

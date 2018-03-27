@@ -48,7 +48,6 @@ public class CategorySavePop extends Activity implements AdapterView.OnItemSelec
 
         photo = getIntent().getStringExtra("photo");
         username = ((Constants)getApplication()).getUsername();
-        System.out.println("DIOPORCO \t" + username);
         spinner = findViewById(R.id.categoriesSpinner);
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();

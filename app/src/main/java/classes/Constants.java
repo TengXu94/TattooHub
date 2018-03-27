@@ -13,6 +13,7 @@ public class Constants extends Application{
     public static final String GOOGLE_API_KEY = "AIzaSyApW_Q2fGmyF-btB2MtaJ-S3j6Zu85bZbg";
     public static final String cx ="000845837705475970075:xmmi7g9uofk";
     public static final String google_api = "https://www.googleapis.com/customsearch/v1?key="+GOOGLE_API_KEY+"&cx="+cx+"&searchType=image&q=tattoo+";
+    private String hash;
     private String username;
 
     public String getUsername() {
@@ -21,5 +22,13 @@ public class Constants extends Application{
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 }
