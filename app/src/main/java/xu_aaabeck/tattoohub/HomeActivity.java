@@ -55,7 +55,7 @@ public class HomeActivity extends FragmentActivity {
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_first),
                         Color.parseColor(colors[0]))
-                        .selectedIcon(getResources().getDrawable(R.drawable.ic_sixth))
+                        .selectedIcon(getResources().getDrawable(R.mipmap.ic_profile))
                         .title("My Profile")
                         .build()
         );
@@ -63,7 +63,7 @@ public class HomeActivity extends FragmentActivity {
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_second),
                         Color.parseColor(colors[1]))
-                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
+                        .selectedIcon(getResources().getDrawable(R.mipmap.ic_home))
                         .title("Home")
                         .build()
         );
@@ -71,7 +71,7 @@ public class HomeActivity extends FragmentActivity {
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_third),
                         Color.parseColor(colors[2]))
-                        .selectedIcon(getResources().getDrawable(R.drawable.ic_seventh))
+                        .selectedIcon(getResources().getDrawable(R.mipmap.ic_categories))
                         .title("My Images")
                         .build()
         );
