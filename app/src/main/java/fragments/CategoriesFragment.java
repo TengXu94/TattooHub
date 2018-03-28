@@ -3,17 +3,19 @@ package fragments;
 
 import adapters.CategoryList;
 import classes.Constants;
-import interfaces.AsyncResponse;
-import model.Category;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -21,7 +23,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 
 import java.util.ArrayList;
@@ -29,7 +30,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import tasks.GetUserSelfInfoTask;
 import xu_aaabeck.tattoohub.CategoryGalleryActivity;
 import xu_aaabeck.tattoohub.R;
 
@@ -71,6 +71,49 @@ public class CategoriesFragment extends Fragment{
         View view = inflater.inflate(R.layout.categories_fragment, container, false);
 
         listViewCategory = (ListView) view.findViewById(R.id.categoriesListView);
+
+        listViewCategory.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int pos, long id) {
+
+                Log.v("long clicked","pos: " + pos);
+                final String selectedCategory = (String) listViewCategory.getItemAtPosition(pos);
+                Log.v("long clicked","pos: " + selectedCategory + username);
+
+                // custom dialog
+                final Dialog dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.delete_category_dialog);
+                dialog.setTitle("Deleting Category...");
+
+                // set the custom dialog components - text, image and button
+                TextView text = (TextView) dialog.findViewById(R.id.text);
+                text.setText("Do you want to delete category \"" + selectedCategory + "\"?");
+
+
+                Button dialogButtonYES = (Button) dialog.findViewById(R.id.dialogButtonYES);
+                // if button is clicked, close the custom dialog
+                dialogButtonYES.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        DatabaseReference toDelete = categoriesRef.child(username).child(selectedCategory);
+                        toDelete.removeValue();
+
+                        dialog.dismiss();
+
+
+                        Toast.makeText(getContext(), "Category Deleted", Toast.LENGTH_LONG).show();
+                    }
+            });
+
+
+                dialog.show();
+
+                return true;
+            }
+        });
+
+
         userCategories = new HashSet<>();
         return view;
     }
@@ -106,7 +149,6 @@ public class CategoriesFragment extends Fragment{
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
     }

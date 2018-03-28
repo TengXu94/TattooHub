@@ -34,10 +34,11 @@ public class CategorySavePop extends Activity implements AdapterView.OnItemSelec
 
     private DatabaseReference categoriesRef;
     private Set<String> userCategories;
+    private ArrayList<String> tempCategories;
     private String username;
     private String photo;
     private Spinner spinner;
-    private ArrayList<String> tempCategories;
+
 
 
     @Override
