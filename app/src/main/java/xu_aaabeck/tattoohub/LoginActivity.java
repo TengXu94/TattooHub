@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationLi
         this.username = String.valueOf(result);
         ((Constants)this.getApplication()).setUsername(String.valueOf(this.username.hashCode()));
         ((Constants)this.getApplication()).setHash(this.username);
-        Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+        Intent i = new Intent(LoginActivity.this, FaceDetectionActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         i.putExtra("access_token", access_token);

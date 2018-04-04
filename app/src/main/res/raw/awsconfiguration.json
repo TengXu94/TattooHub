@@ -1,0 +1,43 @@
+{
+  "UserAgent": "MobileHub/1.0",
+  "Version": "1.0",
+  "CredentialsProvider": {
+    "CognitoIdentity": {
+      "Default": {
+        "PoolId": "us-east-1:c07d2230-ef3e-460e-bfe5-6c63d50a2b38",
+        "Region": "us-east-1"
+      }
+    }
+  },
+  "IdentityManager": {
+    "Default": {}
+  },
+  "S3TransferUtility": {
+    "Default": {
+      "Bucket": "tattohub-userfiles-mobilehub-2138442159",
+      "Region": "us-east-1"
+    }
+  },
+  "Cognito": {
+    "Default": {
+      "Region": "us-east-1"
+    }
+  },
+  "PinpointAnalytics": {
+    "Default": {
+      "AppId": "d3494895f86c4ea8bf46b74dcd87f2ed",
+      "Region": "us-east-1"
+    }
+  },
+  "PinpointTargeting": {
+    "Default": {
+      "Region": "us-east-1"
+    }
+  },
+  "UserFileManager": {
+    "Default": {
+      "Bucket": "tattohub-userfiles-mobilehub-2138442159",
+      "Region": "us-east-1"
+    }
+  }
+}

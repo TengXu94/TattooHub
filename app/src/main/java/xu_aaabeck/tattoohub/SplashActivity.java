@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 
+import com.amazonaws.mobile.client.AWSMobileClient;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,6 +33,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AWSMobileClient.getInstance().initialize(this).execute();
         setContentView(R.layout.activity_splash);
 
         lv = findViewById(R.id.lv);

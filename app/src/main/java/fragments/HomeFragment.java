@@ -6,7 +6,9 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import com.amazonaws.mobileconnectors.s3.transferutility.*;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
@@ -37,6 +40,7 @@ import interfaces.AsyncResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import tasks.AmazonUploadTask;
 import tasks.GoogleCustomSearchTask;
 import xu_aaabeck.tattoohub.R;
 
@@ -75,6 +79,13 @@ public class HomeFragment extends Fragment implements AsyncResponse{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         default_index = 1;
+
+        //HIDE keyboard when the fragment is created
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        //Ignore URI exposed error
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
     }
 
 
@@ -96,12 +107,10 @@ public class HomeFragment extends Fragment implements AsyncResponse{
         access_token = i.getStringExtra("access_token");
         lvFeed = (ListView) view.findViewById(R.id.lv_feed);
         etSearch = (EditText) view.findViewById(R.id.et_search);
-
+        etSearch.setActivated(false);
         lvAdapter= new UrlListViewAdapter(getActivity(),0,datas);
         //lvAdapter = new SimpleListViewAdapter(getActivity(), 0, data);
         lvFeed.setAdapter(lvAdapter);
-
-
 
 
         FloatingActionButton galleryBtn = view.findViewById(R.id.file);
@@ -122,15 +131,6 @@ public class HomeFragment extends Fragment implements AsyncResponse{
                 startActivityForResult(i, GALLERY_RESULT_LOAD_IMAGE);
             }
         });
-
-
-
-
-
-
-
-
-
         return view;
     }
 
@@ -267,6 +267,8 @@ public class HomeFragment extends Fragment implements AsyncResponse{
             if (resultCode == RESULT_OK && null != data) {
                 selectedImage = data.getData();
                 shareIntagramIntent("file://" + getRealPathFromURI(selectedImage));
+                AmazonUploadTask aws = new AmazonUploadTask(getContext(), getRealPathFromURI(selectedImage));
+                aws.uploadData();
 
             }
         }
