@@ -27,7 +27,6 @@ public class AmazonRekogntion2 {
         String photo = "tattoo.jpg";
         AWSCredentials credentials=null;
         try {
-            System.out.println(new ProfileCredentialsProvider("default").getCredentials());
             credentials = new ProfileCredentialsProvider("default").getCredentials();
         } catch (Exception e) {
             e.printStackTrace();
