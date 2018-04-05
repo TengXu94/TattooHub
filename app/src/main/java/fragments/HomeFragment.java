@@ -1,17 +1,19 @@
 package fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import com.amazonaws.mobileconnectors.s3.transferutility.*;
-import android.os.Environment;
+
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +23,15 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.regions.Regions;
 import com.google.common.collect.Sets;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -40,7 +43,7 @@ import interfaces.AsyncResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import tasks.AmazonUploadTask;
+import tasks.AmazonRekognitionTask;
 import tasks.GoogleCustomSearchTask;
 import xu_aaabeck.tattoohub.R;
 
@@ -63,6 +66,8 @@ public class HomeFragment extends Fragment implements AsyncResponse{
     private String[] urls;
     private ArrayList<String> datas = new ArrayList<>();
     private String access_token = "";
+    private CognitoCachingCredentialsProvider credentialsProvider;
+    private String path;
 
     private static int CAMERA_RESULT_LOAD_IMAGE = 0;
     private static int GALLERY_RESULT_LOAD_IMAGE = 1;
@@ -86,6 +91,13 @@ public class HomeFragment extends Fragment implements AsyncResponse{
         //Ignore URI exposed error
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
+
+        //AWS credentials
+        credentialsProvider = new CognitoCachingCredentialsProvider(
+                getContext(),
+                "us-east-1:7abffe46-aaa6-40a4-934c-e2e707f38fdc", // Identity pool ID
+                Regions.US_EAST_1 // Region
+        );
     }
 
 
@@ -223,11 +235,22 @@ public class HomeFragment extends Fragment implements AsyncResponse{
 
     @Override
     public void processFinish(String result){
-       this.urls = result.split(" ");
-       for (int i = 0; i < urls.length; i++){
-           datas.add(urls[i]);
-       }
-       lvAdapter.notifyDataSetChanged();
+        //ok share
+        if(result.equals("Tattoo")){
+            shareIntagramIntent("file://" + path);
+        }
+        //google download
+        if(!result.equals("Tattoo") && result.length() > 1) {
+            this.urls = result.split(" ");
+            for (int i = 0; i < urls.length; i++) {
+                datas.add(urls[i]);
+            }
+            lvAdapter.notifyDataSetChanged();
+        }
+        else{
+            //POP UP is not a tattoo!!
+            showPopup();
+        }
     }
 
     public boolean filter(Object[] tags){
@@ -243,7 +266,6 @@ public class HomeFragment extends Fragment implements AsyncResponse{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         if(requestCode == CAMERA_RESULT_LOAD_IMAGE){
             if (data != null) {
 
@@ -255,21 +277,18 @@ public class HomeFragment extends Fragment implements AsyncResponse{
                         .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 cursor.moveToLast();
 
-                String imagePath = cursor.getString(column_index_data);
-                shareIntagramIntent("file://" + imagePath);
+                this.path = cursor.getString(column_index_data);
+
+                new AmazonRekognitionTask(this,credentialsProvider, path).execute();
 
             }
         }
         if(requestCode == GALLERY_RESULT_LOAD_IMAGE){
 
-            Uri selectedImage = null;
-
             if (resultCode == RESULT_OK && null != data) {
-                selectedImage = data.getData();
-                shareIntagramIntent("file://" + getRealPathFromURI(selectedImage));
-                AmazonUploadTask aws = new AmazonUploadTask(getContext(), getRealPathFromURI(selectedImage));
-                aws.uploadData();
-
+                Uri selectedImage = data.getData();
+                this.path = getRealPathFromURI(selectedImage);
+                new AmazonRekognitionTask(this,credentialsProvider,path).execute();
             }
         }
 
@@ -290,7 +309,7 @@ public class HomeFragment extends Fragment implements AsyncResponse{
         return result;
     }
 
-    private void shareIntagramIntent(String path) {
+    public void shareIntagramIntent(String path) {
         Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage("com.instagram.android");
         if (intent != null) {
             Intent shareIntent = new Intent();
@@ -317,6 +336,17 @@ public class HomeFragment extends Fragment implements AsyncResponse{
         }
     }
 
+    public void showPopup() {
 
-
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage("It seems that there is any tattoo in this image/photo please zoom on the tattoo if we are wrong");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
 }

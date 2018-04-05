@@ -39,6 +39,7 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
     private TextView logout;
     private TextView profile;
     private TextView help;
+    private TextView about;
 
 
     public static ProfileFragment newInstance() {
@@ -99,6 +100,23 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
             public void onClick(View view) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/TengXu94/TattooHub"));
                 startActivity(browserIntent);
+            }
+        });
+
+        about = view.findViewById(R.id.about);
+        about.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setTitle("Info");
+                alertDialog.setMessage("DEVELOPERS:\n\tXu Teng Andrea\n\tTomassi Valerio\nICON DESIGNERS:\n\tAliano Giorgia\n\tLim Stella Marie");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
             }
         });
 

@@ -62,6 +62,7 @@
                 android:text="Logout" />
 
             <TextView
+                android:id="@+id/about"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"

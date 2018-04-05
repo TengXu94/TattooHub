@@ -28,7 +28,6 @@ public class FullImageActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        super.onBackPressed();
         finish();
     }
 }
