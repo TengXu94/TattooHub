@@ -31,4 +31,6 @@ public class Constants extends Application{
     public void setHash(String hash) {
         this.hash = hash;
     }
+
+
 }

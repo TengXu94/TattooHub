@@ -2,6 +2,7 @@ package xu_aaabeck.tattoohub;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -42,6 +43,10 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationLi
             auth_dialog.dismiss();
         }
         this.access_token = access_token;
+
+        SharedPreferences prefs = getSharedPreferences("shared",MODE_PRIVATE);
+        prefs.edit().putBoolean("logged",true).apply();
+        prefs.edit().putString("access_token", access_token).apply();
         new GetUserSelfInfoTask(this,"username").execute(access_token);
 
 

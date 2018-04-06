@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +29,7 @@ import xu_aaabeck.tattoohub.LoginActivity;
 import xu_aaabeck.tattoohub.R;
 
 import static android.content.ContentValues.TAG;
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by root on 18.03.18.
@@ -78,6 +81,9 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
                                 clearCookies(getContext());
                                 Intent i = new Intent(getContext(), LoginActivity.class);
                                 startActivity(i);
+                                SharedPreferences prefs = getActivity().getSharedPreferences("shared",MODE_PRIVATE);
+                                prefs.edit().putBoolean("logged",false).apply();
+
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
