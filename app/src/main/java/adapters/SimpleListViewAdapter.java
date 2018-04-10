@@ -1,6 +1,5 @@
 package adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import com.squareup.picasso.Picasso;
 
 import classes.Data;
-import xu_aaabeck.tattoohub.CategorySavePop;
 import xu_aaabeck.tattoohub.FullImageActivity;
 import xu_aaabeck.tattoohub.R;
 
@@ -53,22 +51,6 @@ public class SimpleListViewAdapter extends ArrayAdapter<Data> {
             public void onClick(View v) {
                 Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show();
 
-            }
-        });
-
-        iv_photo.setOnLongClickListener(new View.OnLongClickListener() {
-
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(context, "Long Click", Toast.LENGTH_SHORT).show();
-
-                Intent i = new Intent(context, CategorySavePop.class);
-                Activity activity = (Activity)context;
-                i.putExtra("photo", data.get(position).getImages().getStandard_resolution().getUrl());
-
-                context.startActivity(i);
-
-                return true;
             }
         });
 

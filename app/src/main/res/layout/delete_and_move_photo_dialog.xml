@@ -35,10 +35,11 @@
         android:id="@+id/categoriesSpinner"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/newCategoryTextEdit"
-        android:background="@color/colorPrimaryDark" />
+        android:background="@android:color/darker_gray"
+        android:spinnerMode="dialog" />
 
     <TextView
         android:id="@+id/newCategoryTextEdit"

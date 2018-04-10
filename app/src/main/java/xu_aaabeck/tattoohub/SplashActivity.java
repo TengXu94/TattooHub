@@ -56,7 +56,7 @@ public class SplashActivity extends AppCompatActivity implements AsyncResponse {
                 @Override
                 public void run() {
 
-                    Intent loginIntent = new Intent(SplashActivity.this, HomeActivity.class);
+                    Intent jump_to_home = new Intent(SplashActivity.this, HomeActivity.class);
                     startActivity(jump_to_home);
                     finish();
                 }

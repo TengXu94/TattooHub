@@ -143,6 +143,7 @@ public class CategoriesFragment extends Fragment{
                 categoryList.addAll(userCategories);
 
                 CategoryList adapter = new CategoryList(getActivity(), categoryList);
+
                 listViewCategory.setAdapter(adapter);
 
             }

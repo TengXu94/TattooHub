@@ -28,6 +28,8 @@ public class CategoryList extends ArrayAdapter<String>{
         super(context, R.layout.categories_fragment, categoryList);
         this.context = context;
         this.categoryList = categoryList;
+
+
     }
 
     @NonNull

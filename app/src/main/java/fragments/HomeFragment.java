@@ -1,11 +1,11 @@
 package fragments;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -13,7 +13,7 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,24 +22,31 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.google.common.collect.Sets;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import adapters.UrlListViewAdapter;
+import classes.Constants;
 import classes.Data;
 import classes.InstagramResponse;
 import classes.RestClient;
 import interfaces.AsyncResponse;
+import model.Category;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -68,6 +75,7 @@ public class HomeFragment extends Fragment implements AsyncResponse{
     private String access_token = "";
     private CognitoCachingCredentialsProvider credentialsProvider;
     private String path;
+
 
     private static int CAMERA_RESULT_LOAD_IMAGE = 0;
     private static int GALLERY_RESULT_LOAD_IMAGE = 1;
@@ -143,6 +151,7 @@ public class HomeFragment extends Fragment implements AsyncResponse{
                 startActivityForResult(i, GALLERY_RESULT_LOAD_IMAGE);
             }
         });
+
         return view;
     }
 
@@ -242,6 +251,7 @@ public class HomeFragment extends Fragment implements AsyncResponse{
         //google download
         if(!result.equals("Tattoo") && result.length() > 1) {
             this.urls = result.split(" ");
+            System.out.println(urls);
             for (int i = 0; i < urls.length; i++) {
                 datas.add(urls[i]);
             }
@@ -349,4 +359,5 @@ public class HomeFragment extends Fragment implements AsyncResponse{
                 });
         alertDialog.show();
     }
+
 }

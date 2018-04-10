@@ -98,7 +98,6 @@ public class CategoryGalleryActivity extends AppCompatActivity {
                 final String url = (String) Grid.getItemAtPosition(position);
 
 
-
                 // custom dialog
                 final Dialog dialog = new Dialog(CategoryGalleryActivity.this);
                 dialog.setContentView(R.layout.delete_and_move_photo_dialog);

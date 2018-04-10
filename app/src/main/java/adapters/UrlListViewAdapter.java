@@ -1,22 +1,34 @@
 package adapters;
 
-import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-import classes.Data;
-import xu_aaabeck.tattoohub.CategorySavePop;
+import classes.Constants;
+import model.Category;
 import xu_aaabeck.tattoohub.FullImageActivity;
 import xu_aaabeck.tattoohub.R;
 
@@ -26,11 +38,24 @@ public class UrlListViewAdapter extends ArrayAdapter<String> {
     private ArrayList<String> data;
     private String url;
     private String owner;
+    private DatabaseReference categoriesRef;
+    private Set<String> userCategories;
+    private ArrayList<String> tempCategories;
+    private String username;
+    private String photo;
+    private Spinner spinner;
 
     public UrlListViewAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
         super(context, textViewResourceId, objects);
         this.context = context;
         this.data = objects;
+
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        categoriesRef = database.getReference("categories");
+
+        userCategories = new HashSet<>();
+        tempCategories = new ArrayList<>();
+
     }
 
     @Override
@@ -46,24 +71,133 @@ public class UrlListViewAdapter extends ArrayAdapter<String> {
         TextView tv_user_fullname = (TextView) curView.findViewById(R.id.tv_user_fullname);
         final ImageView iv_photo = (ImageView) curView.findViewById(R.id.iv_photo);
 
+        username = ((Constants) context.getApplicationContext()).getUsername();
+
+
         tv_user_fullname.setText(owner);
 
-
         iv_photo.setOnLongClickListener(new View.OnLongClickListener() {
-
             @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(context, "Long Click", Toast.LENGTH_SHORT).show();
+            public boolean onLongClick(View view) {
 
-                Intent i = new Intent(context, CategorySavePop.class);
-                Activity activity = (Activity)context;
-                i.putExtra("photo", url);
+                // custom dialog
+                final Dialog dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.category_save_pop);
+                dialog.setTitle("Saving photo in a category...");
 
-                context.startActivity(i);
+                spinner = dialog.findViewById(R.id.categoriesSpinner);
+
+                final EditText newCat = dialog.findViewById(R.id.newCategoryTextEdit);
+                newCat.setVisibility(View.INVISIBLE);
+                Button saveButton= dialog.findViewById(R.id.saveButton);
+
+                spinner.setPrompt("Select a category");
+
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                        String selectedCategory = (String) spinner.getSelectedItem();
+
+                        if(selectedCategory.equals(context.getString(R.string.newCategory)))
+                            newCat.setVisibility(View.VISIBLE);
+                        else newCat.setVisibility(View.INVISIBLE);
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+                            newCat.setVisibility(View.INVISIBLE);
+                    }
+                });
+
+                saveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Category category = new Category();
+
+                        String selectedCategory = (String) spinner.getSelectedItem();
+
+                        if(selectedCategory.equals(context.getString(R.string.newCategory))) {
+
+                            String newCategory = "";
+
+                            newCategory = (String) newCat.getText().toString();
+
+                            if (newCategory.isEmpty())
+                                Toast.makeText(context, "Specify a New Category", Toast.LENGTH_SHORT).show();
+                            else {
+
+                                category = new Category(newCategory, username, url);
+
+                            }
+                        }
+
+                        else {
+
+                            category = new Category(selectedCategory, username, url);
+
+                        }
+
+                        categoriesRef.child(username).child(category.getName()).child(category.getId()).setValue(category);
+
+                        Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
+
+                        dialog.dismiss();
+                    }
+                });
+
+
+                dialog.show();
+
+                categoriesRef.child(username).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        userCategories.clear();
+
+                        for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()){
+
+                            String categoryName = categorySnapshot.getKey();
+
+                            if(categoryName != null)
+                                userCategories.add(categoryName);
+
+                        }
+
+                        tempCategories.clear();
+
+                        tempCategories.addAll(userCategories);
+                        tempCategories.add(0, context.getString(R.string.newCategory));
+
+                        // Create an ArrayAdapter using the string array and a default spinner layout
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context.getApplicationContext(),
+                                android.R.layout.simple_spinner_item, tempCategories);
+
+                        // Specify the layout to use when the list of choices appears
+                        adapter.setDropDownViewResource(R.layout.spinner_item);
+                        // Apply the adapter to the spinner
+                        spinner.setAdapter(adapter);
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
 
                 return true;
             }
+
+
         });
+
+
 
         iv_photo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,4 +221,5 @@ public class UrlListViewAdapter extends ArrayAdapter<String> {
     public void clearListView() {
         data.clear();
     }
+
 }
