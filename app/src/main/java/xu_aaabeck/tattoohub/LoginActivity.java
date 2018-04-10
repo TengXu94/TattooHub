@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationLi
         i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         i.putExtra("access_token", access_token);
         startActivity(i);
+        finish();
     }
 
 }

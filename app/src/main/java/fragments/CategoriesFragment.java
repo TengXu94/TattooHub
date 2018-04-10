@@ -123,6 +123,12 @@ public class CategoriesFragment extends Fragment{
     public void onStart() {
         super.onStart();
 
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
         categoriesRef.child(username).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -152,11 +158,7 @@ public class CategoriesFragment extends Fragment{
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-    }
 
-    @Override
-    public void onResume(){
-        super.onResume();
 
         listViewCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

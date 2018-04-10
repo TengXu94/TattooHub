@@ -14,7 +14,7 @@
             android:layout_width="fill_parent"
             android:id="@+id/imageID"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/applogo"
+            app:srcCompat="@drawable/ic_launcher_background"
             android:scaleType="fitXY"
             android:contentDescription="@string/app_name"
             android:layout_height="match_parent" />

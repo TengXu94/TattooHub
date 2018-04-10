@@ -36,13 +36,10 @@ public class UrlListViewAdapter extends ArrayAdapter<String> {
 
     private Context context;
     private ArrayList<String> data;
-    private String url;
-    private String owner;
     private DatabaseReference categoriesRef;
     private Set<String> userCategories;
     private ArrayList<String> tempCategories;
     private String username;
-    private String photo;
     private Spinner spinner;
 
     public UrlListViewAdapter(Context context, int textViewResourceId, ArrayList<String> objects) {
@@ -65,16 +62,13 @@ public class UrlListViewAdapter extends ArrayAdapter<String> {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             curView = vi.inflate(R.layout.feed_list_view_item, null);
         }
-        url = data.get(position).split(",")[0];
-
-        owner = data.get(position).split(",")[1];
         TextView tv_user_fullname = (TextView) curView.findViewById(R.id.tv_user_fullname);
         final ImageView iv_photo = (ImageView) curView.findViewById(R.id.iv_photo);
 
         username = ((Constants) context.getApplicationContext()).getUsername();
 
 
-        tv_user_fullname.setText(owner);
+        tv_user_fullname.setText(data.get(position).split(",")[1]);
 
         iv_photo.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -130,14 +124,14 @@ public class UrlListViewAdapter extends ArrayAdapter<String> {
                                 Toast.makeText(context, "Specify a New Category", Toast.LENGTH_SHORT).show();
                             else {
 
-                                category = new Category(newCategory, username, url);
+                                category = new Category(newCategory, username, data.get(position).split(",")[0]);
 
                             }
                         }
 
                         else {
 
-                            category = new Category(selectedCategory, username, url);
+                            category = new Category(selectedCategory, username, data.get(position).split(",")[0]);
 
                         }
 
@@ -202,9 +196,8 @@ public class UrlListViewAdapter extends ArrayAdapter<String> {
         iv_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(context, FullImageActivity.class);
-                i.putExtra("photo", url);
+                i.putExtra("photo", data.get(position).split(",")[0]);
                 context.startActivity(i);
             }
         });
@@ -212,7 +205,7 @@ public class UrlListViewAdapter extends ArrayAdapter<String> {
 
 
         Picasso.with(context)
-                .load(url).fit()
+                .load(data.get(position).split(",")[0]).fit()
                 .into(iv_photo);
 
         return curView;

@@ -22,7 +22,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="@android:color/background_light"
+            android:textColorHighlight="@android:color/background_light"
+            android:textColorHint="@android:color/background_light"
+            android:textColorLink="@android:color/background_light"
+            android:textCursorDrawable="@android:color/background_light"
+            android:textIsSelectable="false" />
 
     </LinearLayout>
 

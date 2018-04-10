@@ -18,12 +18,23 @@
                                 <PersistentState>
                                   <option name="children">
                                     <map>
+                                      <entry key="backgroundImage">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="scalingPercent" value="29" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
                                       <entry key="foregroundImage">
                                         <value>
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="103" />
+                                                <entry key="scalingPercent" value="29" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,7 +44,12 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="foregroundImage" value="C:\Users\xu\Downloads\logoA.png" />
+                                      <entry key="backgroundColor" value="a65c41" />
+                                      <entry key="backgroundImage" value="$USER_HOME$/Downloads/icons8-immagine-24.png" />
+                                      <entry key="backgroundLayerName" value="ic_launcher_background" />
+                                      <entry key="foregroundImage" value="$USER_HOME$/Downloads/icons8-immagine-24.png" />
+                                      <entry key="foregroundLayerName" value="ic_gallery_dio" />
+                                      <entry key="outputName" value="ic_gallery" />
                                     </map>
                                   </option>
                                 </PersistentState>

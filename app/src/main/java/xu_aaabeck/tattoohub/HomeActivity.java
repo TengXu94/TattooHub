@@ -62,29 +62,30 @@ public class HomeActivity extends FragmentActivity {
         final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_first),
+                        getResources().getDrawable(R.mipmap.ic_profile),
                         Color.parseColor(colors[0]))
-                        .selectedIcon(getResources().getDrawable(R.mipmap.ic_profile))
+                        .selectedIcon(getResources().getDrawable(R.mipmap.ic_profile2))
                         .title("My Profile")
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_second),
+                        getResources().getDrawable(R.mipmap.ic_home),
                         Color.parseColor(colors[1]))
-                        .selectedIcon(getResources().getDrawable(R.mipmap.ic_home))
+                        .selectedIcon(getResources().getDrawable(R.mipmap.ic_home2))
                         .title("Home")
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_third),
+                        getResources().getDrawable(R.mipmap.ic_categories),
                         Color.parseColor(colors[2]))
-                        .selectedIcon(getResources().getDrawable(R.mipmap.ic_categories))
+                        .selectedIcon(getResources().getDrawable(R.mipmap.ic_categories2))
                         .title("My Images")
                         .build()
         );
         navigationTabBar.setModels(models);
+        navigationTabBar.setIsBadged(false);
         navigationTabBar.setViewPager(viewPager, 1);
 
         navigationTabBar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

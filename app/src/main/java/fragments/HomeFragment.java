@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -158,6 +159,7 @@ public class HomeFragment extends Fragment implements AsyncResponse{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        etSearch.setTextColor(Color.parseColor("#FFFFFF"));
         etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -172,7 +174,7 @@ public class HomeFragment extends Fragment implements AsyncResponse{
                         lvAdapter.clearListView();
                         new GoogleCustomSearchTask(HomeFragment.this).execute(query);
                         //fetchData(etSearch.getText().toString());
-                        etSearch.setText("");
+                        etSearch.setText(etSearch.getText().toString());
                         etSearch.clearFocus();
                     }
 

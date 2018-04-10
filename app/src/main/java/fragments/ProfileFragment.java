@@ -58,7 +58,12 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
 
         super.onCreate(savedInstanceState);
         Intent i = getActivity().getIntent();
-        access_token = i.getStringExtra("access_token");
+
+        SharedPreferences prefs = getActivity().getSharedPreferences("shared",MODE_PRIVATE);
+
+      access_token = i.getStringExtra("access_token");
+        //access_token = prefs.getString("access_token", "diomerda");
+
         new GetUserSelfInfoTask(this,"profile_picture").execute(access_token);
     }
 
