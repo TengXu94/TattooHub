@@ -13,6 +13,6 @@
         android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        android:background="@drawable/hqdefault" />
+        android:background="@drawable/ic_login" />
 
 </android.support.design.widget.CoordinatorLayout>
