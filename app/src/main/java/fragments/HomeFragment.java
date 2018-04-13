@@ -331,7 +331,6 @@ public class HomeFragment extends Fragment implements AsyncResponse{
                 shareIntent.putExtra(Intent.EXTRA_STREAM,
                         Uri.parse(path));
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             shareIntent.setType("image/*");

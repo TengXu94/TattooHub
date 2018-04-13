@@ -62,7 +62,6 @@ public class AmazonRekognitionTask extends AsyncTask<String, Void, String> {
                 for (Label label : labels) {
                     System.out.println(label.getName() + ": " + label.getConfidence().toString());
                     if(label.getName().equals("Tattoo")){
-                        System.out.println("SAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                         return label.getName();
                     }
                 }

@@ -1,5 +1,6 @@
 package fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,7 +9,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,13 +18,13 @@ import android.webkit.CookieSyncManager;
 import android.webkit.CookieManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import classes.Constants;
 import interfaces.AsyncResponse;
-import tasks.GetUserSelfInfoTask;
-import tasks.GoogleCustomSearchTask;
+import tasks.InstagramUserInfoTask;
 import xu_aaabeck.tattoohub.LoginActivity;
 import xu_aaabeck.tattoohub.R;
 
@@ -52,29 +52,32 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
         return fragmentFirst;
     }
 
-    // Store instance variables based on arguments passed
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        Intent i = getActivity().getIntent();
+        access_token = getActivity().getIntent().getStringExtra("access_token");
 
-        SharedPreferences prefs = getActivity().getSharedPreferences("shared",MODE_PRIVATE);
-
-      access_token = i.getStringExtra("access_token");
-        //access_token = prefs.getString("access_token", "diomerda");
-
-        new GetUserSelfInfoTask(this,"profile_picture").execute(access_token);
+        if(access_token!= null) {
+            new InstagramUserInfoTask(this, "profile_picture").execute(access_token);
+        }
+        else {
+            Toast.makeText(getContext(), "access_token not found please login again", Toast.LENGTH_LONG);
+        }
     }
 
-    // Inflate the view for the fragment based on layout XML
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.profile_fragment, container, false);
 
+        View view = inflater.inflate(R.layout.profile_fragment, container, false);
+        help = view.findViewById(R.id.help);
         my_photo = (ImageView) view.findViewById(R.id.header_cover_image);
         logout = (TextView)view.findViewById(R.id.logout);
+        profile = view.findViewById(R.id.profileName);
+        about = view.findViewById(R.id.about);
+
+        //LOGOUT BUTTON
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +86,7 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
-                                clearCookies(getContext());
+                                clearCookies(getContext(), getActivity());
                                 Intent i = new Intent(getContext(), LoginActivity.class);
                                 startActivity(i);
                                 SharedPreferences prefs = getActivity().getSharedPreferences("shared",MODE_PRIVATE);
@@ -102,10 +105,11 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
                         .setNegativeButton("No", dialogClickListener).show();
             }
         });
-        profile = view.findViewById(R.id.profileName);
+
+        //PROFILE NAME
         profile.setText(((Constants)getActivity().getApplication()).getHash());
 
-        help = view.findViewById(R.id.help);
+        //HELP BUTTON
         help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,7 +118,7 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
             }
         });
 
-        about = view.findViewById(R.id.about);
+        //ABOUT BUTTON
         about.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,7 +146,7 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
     }
 
     @SuppressWarnings("deprecation")
-    public static void clearCookies(Context context)
+    public static void clearCookies(Context context, Activity activity)
     {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
@@ -160,6 +164,7 @@ public class ProfileFragment extends Fragment implements AsyncResponse {
             cookieSyncMngr.stopSync();
             cookieSyncMngr.sync();
         }
+        activity.finish();
     }
 
 
