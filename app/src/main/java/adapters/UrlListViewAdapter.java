@@ -110,23 +110,19 @@ public class UrlListViewAdapter extends ArrayAdapter<String> {
                     @Override
                     public void onClick(View v) {
 
+                        String selectedCategory = null;
+                        String newCategory = null;
+
                         Category category = new Category();
 
-                        String selectedCategory = (String) spinner.getSelectedItem();
+                        selectedCategory = (String) spinner.getSelectedItem();
 
                         if(selectedCategory.equals(context.getString(R.string.newCategory))) {
 
-                            String newCategory = "";
-
                             newCategory = (String) newCat.getText().toString();
 
-                            if (newCategory.isEmpty())
-                                Toast.makeText(context, "Specify a New Category", Toast.LENGTH_SHORT).show();
-                            else {
+                            category = new Category(newCategory, username, data.get(position).split(",")[0]);
 
-                                category = new Category(newCategory, username, data.get(position).split(",")[0]);
-
-                            }
                         }
 
                         else {
@@ -135,11 +131,14 @@ public class UrlListViewAdapter extends ArrayAdapter<String> {
 
                         }
 
-                        categoriesRef.child(username).child(category.getName()).child(category.getId()).setValue(category);
+                        Log.v("category new", newCategory);
 
-                        Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
-
-                        dialog.dismiss();
+                        if(newCategory != null && !newCategory.equals("")) {
+                            categoriesRef.child(username).child(category.getName()).child(category.getId()).setValue(category);
+                            Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                        else Toast.makeText(context, "Specify new category name!", Toast.LENGTH_SHORT).show();
                     }
                 });
 
