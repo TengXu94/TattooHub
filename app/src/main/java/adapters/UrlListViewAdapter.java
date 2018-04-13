@@ -131,9 +131,7 @@ public class UrlListViewAdapter extends ArrayAdapter<String> {
 
                         }
 
-                        Log.v("category new", newCategory);
-
-                        if(newCategory != null && !newCategory.equals("")) {
+                        if(!selectedCategory.equals("New Category") || newCategory != null && !newCategory.equals("")) {
                             categoriesRef.child(username).child(category.getName()).child(category.getId()).setValue(category);
                             Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
