@@ -148,9 +148,11 @@ public class CategoriesFragment extends Fragment{
                 categoryList.clear();
                 categoryList.addAll(userCategories);
 
-                CategoryList adapter = new CategoryList(getActivity(), categoryList);
 
-                listViewCategory.setAdapter(adapter);
+                if(getActivity() != null) {
+                    CategoryList adapter = new CategoryList(getActivity(), categoryList);
+                    listViewCategory.setAdapter(adapter);
+                }
 
             }
 
