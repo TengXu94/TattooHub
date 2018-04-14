@@ -1,6 +1,5 @@
 package xu_aaabeck.tattoohub;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,7 +11,7 @@ import classes.AuthenticationDialog;
 import classes.Constants;
 import interfaces.AsyncResponse;
 import interfaces.AuthenticationListener;
-import tasks.GetUserSelfInfoTask;
+import tasks.InstagramUserInfoTask;
 
 public class LoginActivity extends AppCompatActivity implements AuthenticationListener, AsyncResponse{
 
@@ -20,6 +19,7 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationLi
     private Button btn_get_access_token;
     public String username;
     private String access_token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationLi
         SharedPreferences prefs = getSharedPreferences("shared",MODE_PRIVATE);
         prefs.edit().putBoolean("logged",true).apply();
         prefs.edit().putString("access_token", access_token).apply();
-        new GetUserSelfInfoTask(this,"username").execute(access_token);
+        new InstagramUserInfoTask(this,"username").execute(access_token);
 
 
     }

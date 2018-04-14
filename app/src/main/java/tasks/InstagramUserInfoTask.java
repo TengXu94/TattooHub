@@ -21,14 +21,14 @@ import interfaces.AsyncResponse;
  * Created by root on 20.03.18.
  */
 
-public class GetUserSelfInfoTask extends AsyncTask<String, Void, String> {
+public class InstagramUserInfoTask extends AsyncTask<String, Void, String> {
 
 
     private static final String GET_SELF_URL = "https://api.instagram.com/v1/users/self/?access_token=";
     public AsyncResponse delegate = null;
     private String info;
 
-    public GetUserSelfInfoTask(AsyncResponse delegate, String infoNeeded) {
+    public InstagramUserInfoTask(AsyncResponse delegate, String infoNeeded) {
         this.info = infoNeeded;
         this.delegate = delegate;
     }

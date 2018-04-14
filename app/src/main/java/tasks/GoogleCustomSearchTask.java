@@ -22,7 +22,6 @@ public class GoogleCustomSearchTask  extends AsyncTask<String, Void, String> {
 
     private static final String google = Constants.google_api;
     public AsyncResponse delegate = null;
-    private String info;
 
     public GoogleCustomSearchTask(AsyncResponse delegate) {
         this.delegate = delegate;

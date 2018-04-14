@@ -39,8 +39,6 @@ public class HomeActivity extends FragmentActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +53,7 @@ public class HomeActivity extends FragmentActivity {
         fragmentsManager = new FragmentsManager(getSupportFragmentManager());
         viewPager.setAdapter(fragmentsManager);
 
-
         final String[] colors = getResources().getStringArray(R.array.default_preview);
-
         final NavigationTabBar navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_horizontal);
         final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
         models.add(
@@ -105,24 +101,6 @@ public class HomeActivity extends FragmentActivity {
 
             }
         });
-
-        navigationTabBar.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                for (int i = 0; i < navigationTabBar.getModels().size(); i++) {
-                    final NavigationTabBar.Model model = navigationTabBar.getModels().get(i);
-                    navigationTabBar.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            model.showBadge();
-
-
-                        }
-                    }, i * 100);
-                }
-            }
-        }, 500);
     }
 
     public static void verifyStoragePermissions(Activity activity) {

@@ -1,11 +1,8 @@
 package adapters;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.ViewGroup;
-
 import fragments.CategoriesFragment;
 import fragments.HomeFragment;
 import fragments.ProfileFragment;
@@ -31,11 +28,11 @@ public class FragmentsManager extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case 0: // Fragment # 0 - This will show ProfileFragment
+            case 0:
                 return ProfileFragment.newInstance();
-            case 1: // Fragment #  1 - This will show HomeFragment
+            case 1:
                 return HomeFragment.newInstance();
-            case 2: // Fragment # 2 - This will show CategoriesFragment
+            case 2:
                 return CategoriesFragment.newInstance();
             default:
                 return null;
