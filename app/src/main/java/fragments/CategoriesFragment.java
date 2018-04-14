@@ -168,9 +168,7 @@ public class CategoriesFragment extends Fragment{
                 // Get the selected item text from ListView
                 String selectedItem = (String) parent.getItemAtPosition(position);
 
-                Intent go = new Intent(getContext(), CategoryGalleryActivity.class).setFlags(
-                        Intent.FLAG_ACTIVITY_NEW_TASK |
-                                Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                Intent go = new Intent(getContext(), CategoryGalleryActivity.class);
                 go.putExtra("selectedCategory", selectedItem);
                 startActivity(go);
             }
