@@ -33,20 +33,25 @@ public class InstaListViewAdapter extends ArrayAdapter<Data> {
     }
 
     @Override
-    public View getView(final int position, final View convertView, ViewGroup parent) {
-        View curView = convertView;
-        if (curView == null) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        InstaSearchHolder holder;
+        if (convertView == null) {
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            curView = vi.inflate(R.layout.feed_list_view_item, null);
+            convertView = vi.inflate(R.layout.feed_list_view_item, null);
+            holder = new InstaSearchHolder();
+            holder.name = (TextView) convertView.findViewById(R.id.tv_user_fullname);
+            holder.image = (ImageView) convertView.findViewById(R.id.iv_photo);
+            holder.user_photo = (ImageView) convertView.findViewById(R.id.iv_profile);
+            convertView.setTag(holder);
+        }
+        else {
+            holder = (InstaSearchHolder)convertView.getTag();
         }
 
-        TextView tv_user_fullname = (TextView) curView.findViewById(R.id.tv_user_fullname);
-        final ImageView iv_photo = (ImageView) curView.findViewById(R.id.iv_photo);
-        ImageView iv_profile = (ImageView) curView.findViewById(R.id.iv_profile);
 
-        tv_user_fullname.setText(data.get(position).getUser().getFull_name());
+        holder.name.setText(data.get(position).getUser().getFull_name());
 
-        iv_profile.setOnClickListener(new View.OnClickListener() {
+        holder.user_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show();
@@ -54,7 +59,7 @@ public class InstaListViewAdapter extends ArrayAdapter<Data> {
             }
         });
 
-        iv_photo.setOnClickListener(new View.OnClickListener() {
+        holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show();
@@ -70,15 +75,22 @@ public class InstaListViewAdapter extends ArrayAdapter<Data> {
                 .load(data.get(position).getUser().getProfile_picture())
                 .resize(100, 100)
                 .centerInside()
-                .into(iv_profile);
+                .into(holder.user_photo);
         Picasso.with(context)
                 .load(data.get(position).getImages().getStandard_resolution().getUrl())
-                .into(iv_photo);
+                .into(holder.image);
 
-        return curView;
+        return convertView;
     }
 
     public void clearListView() {
         data.clear();
+    }
+
+
+    static class InstaSearchHolder {
+        private TextView name;
+        private ImageView image;
+        private ImageView user_photo;
     }
 }

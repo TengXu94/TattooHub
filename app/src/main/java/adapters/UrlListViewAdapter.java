@@ -3,6 +3,7 @@ package adapters;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import java.util.Set;
 
 import classes.Constants;
 import model.Category;
+import tasks.GoogleCustomSearchTask;
 import xu_aaabeck.tattoohub.FullImageActivity;
 import xu_aaabeck.tattoohub.R;
 
@@ -56,21 +58,28 @@ public class UrlListViewAdapter extends ArrayAdapter<String> {
     }
 
     @Override
-    public View getView(final int position, final View convertView, ViewGroup parent) {
-        View curView = convertView;
-        if (curView == null) {
-            LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            curView = vi.inflate(R.layout.feed_list_view_item, null);
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        GoogleSearchHolder holder;
+
+        if (convertView == null) {
+            LayoutInflater vi = (LayoutInflater)     getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = vi.inflate(R.layout.feed_list_view_item, null);
+            holder = new GoogleSearchHolder();
+            holder.image = (ImageView) convertView.findViewById(R.id.iv_photo);
+            holder.source = (TextView) convertView.findViewById(R.id.tv_user_fullname);
+            convertView.setTag(holder);
         }
-        TextView tv_user_fullname = (TextView) curView.findViewById(R.id.tv_user_fullname);
-        final ImageView iv_photo = (ImageView) curView.findViewById(R.id.iv_photo);
+
+        else {
+            holder = (GoogleSearchHolder)convertView.getTag();
+        }
 
         username = ((Constants) context.getApplicationContext()).getUsername();
 
 
-        tv_user_fullname.setText(data.get(position).split(",")[1]);
+        holder.source.setText(data.get(position).split(",")[1]);
 
-        iv_photo.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
 
@@ -190,7 +199,7 @@ public class UrlListViewAdapter extends ArrayAdapter<String> {
 
 
 
-        iv_photo.setOnClickListener(new View.OnClickListener() {
+        holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context, FullImageActivity.class);
@@ -203,13 +212,19 @@ public class UrlListViewAdapter extends ArrayAdapter<String> {
 
         Picasso.with(context)
                 .load(data.get(position).split(",")[0]).fit()
-                .into(iv_photo);
+                .into(holder.image);
 
-        return curView;
+        return convertView;
     }
 
     public void clearListView() {
         data.clear();
+    }
+
+
+    static class GoogleSearchHolder {
+        private TextView source;
+        private ImageView image;
     }
 
 }
