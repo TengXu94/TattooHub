@@ -1,32 +1,18 @@
 package classes;
 
-import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-
 import interfaces.AuthenticationListener;
 import xu_aaabeck.tattoohub.R;
 
-import static android.content.ContentValues.TAG;
-import static android.content.Context.MODE_PRIVATE;
 
 
 /**
