@@ -22,6 +22,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -136,8 +137,12 @@ public class HomeFragment extends Fragment implements AsyncResponse, AdapterView
         spin = view.findViewById(R.id.simpleSpinner);
         spin.setOnItemSelectedListener(this);
 
-        SpinnerViewAdapter customAdapter=new SpinnerViewAdapter(getActivity().getApplicationContext(),searchEngine);
+
+        ArrayAdapter customAdapter=new ArrayAdapter(getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,
+                searchEngine);
+        customAdapter.setDropDownViewResource(R.layout.spinner_item);
         spin.setAdapter(customAdapter);
+        spin.setSelection(0);
 
         FloatingActionButton galleryBtn = view.findViewById(R.id.file);
         FloatingActionButton cameraBtn = view.findViewById(R.id.camera);
