@@ -4,6 +4,9 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.services.rekognition.AmazonRekognition;
@@ -33,24 +36,24 @@ public class AmazonRekognitionTask extends AsyncTask<String, Void, String> {
     private String path;
 
     public AmazonRekognitionTask(Context context, AsyncResponse delegate, CognitoCachingCredentialsProvider credentialsProvider,
-                                 String path) {
+                                 String path, ProgressDialog dialog) {
         this.delegate = delegate;
         this.context = context;
         this.credentialsProvider = credentialsProvider;
         this.path = path;
+        this.mProgressDialog = dialog;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        // Create ProgressBar
-        mProgressDialog = new ProgressDialog(context);
         // Set your ProgressBar Title
         mProgressDialog.setTitle("Task");
         // Set your ProgressBar Message
-        mProgressDialog.setMessage("Recognizing any tattoos... Please Wait!");
-        mProgressDialog.setIndeterminate(false);
-        mProgressDialog.setMax(100);
+        mProgressDialog.setMessage("Recognizing any tattoos in the uploaded image... Please Wait!");
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setProgressNumberFormat(null);
+
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         // Show ProgressBar
         mProgressDialog.setCancelable(false);
@@ -104,6 +107,7 @@ public class AmazonRekognitionTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
+        mProgressDialog.setProgress(100);
         mProgressDialog.dismiss();
         this.delegate.processFinish(result);
     }

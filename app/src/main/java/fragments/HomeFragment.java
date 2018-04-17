@@ -1,6 +1,7 @@
 package fragments;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,6 +76,7 @@ public class HomeFragment extends Fragment implements AsyncResponse, AdapterView
     private CognitoCachingCredentialsProvider credentialsProvider;
     private String path;
     private boolean instragram_search = false;
+    private ProgressDialog dialog;
 
 
     private static int CAMERA_RESULT_LOAD_IMAGE = 0;
@@ -99,6 +102,9 @@ public class HomeFragment extends Fragment implements AsyncResponse, AdapterView
         //Ignore URI exposed error
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
+
+        //DIALOG
+        dialog = new ProgressDialog(getActivity());
 
         //AWS credentials
         credentialsProvider = new CognitoCachingCredentialsProvider(
@@ -338,7 +344,7 @@ public class HomeFragment extends Fragment implements AsyncResponse, AdapterView
 
                 this.path = cursor.getString(column_index_data);
 
-                new AmazonRekognitionTask(getActivity().getApplicationContext(),this,credentialsProvider, path).execute();
+                new AmazonRekognitionTask(getActivity(),this,credentialsProvider, path, dialog).execute();
 
             }
         }
@@ -347,7 +353,7 @@ public class HomeFragment extends Fragment implements AsyncResponse, AdapterView
             if (resultCode == RESULT_OK && null != data) {
                 Uri selectedImage = data.getData();
                 this.path = getRealPathFromURI(selectedImage);
-                new AmazonRekognitionTask(getActivity().getApplicationContext(),this,credentialsProvider,path).execute();
+                new AmazonRekognitionTask(getActivity(),this,credentialsProvider,path,dialog).execute();
             }
         }
 
