@@ -50,6 +50,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import tasks.AmazonRekognitionTask;
 import tasks.GoogleCustomSearchTask;
+import xu_aaabeck.tattoohub.HomeActivity;
 import xu_aaabeck.tattoohub.R;
 
 import static android.app.Activity.RESULT_OK;
@@ -180,8 +181,10 @@ public class HomeFragment extends Fragment implements AsyncResponse, AdapterView
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
+
                 // Don't search if the etSearch is emtpy when pressing the done button
                 if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
+
                     if(etSearch.getText().length() <= 0){
                         Toast.makeText(getActivity().getApplicationContext(), "Enter a search tag", Toast.LENGTH_SHORT).show();
 

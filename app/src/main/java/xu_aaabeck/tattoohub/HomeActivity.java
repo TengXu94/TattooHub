@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ public class HomeActivity extends FragmentActivity {
 
     private ViewPager viewPager;
     private FragmentsManager fragmentsManager;
+    private NavigationTabBar navigationTabBar;
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -43,7 +45,7 @@ public class HomeActivity extends FragmentActivity {
         viewPager.setAdapter(fragmentsManager);
 
         final String[] colors = getResources().getStringArray(R.array.default_preview);
-        final NavigationTabBar navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_horizontal);
+        navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_horizontal);
         final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
         models.add(
                 new NavigationTabBar.Model.Builder(
@@ -90,6 +92,8 @@ public class HomeActivity extends FragmentActivity {
 
             }
         });
+
+
     }
 
     public static void verifyStoragePermissions(Activity activity) {
@@ -106,6 +110,7 @@ public class HomeActivity extends FragmentActivity {
         }
 
     }
+
 
 
 }
