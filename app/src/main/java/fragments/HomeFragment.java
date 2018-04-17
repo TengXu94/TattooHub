@@ -1,7 +1,6 @@
 package fragments;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,7 +13,6 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +22,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -34,20 +31,17 @@ import android.widget.Toast;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.google.common.collect.Sets;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 
+import adapters.InstaListViewAdapter;
+import adapters.SpinnerViewAdapter;
 import adapters.UrlListViewAdapter;
-import classes.Constants;
 import classes.Data;
 import classes.InstagramResponse;
 import classes.RestClient;
 import interfaces.AsyncResponse;
-import model.Category;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -61,25 +55,29 @@ import static android.app.Activity.RESULT_OK;
  * Created by root on 15.03.18.
  */
 
-public class HomeFragment extends Fragment implements AsyncResponse{
+public class HomeFragment extends Fragment implements AsyncResponse, AdapterView.OnItemSelectedListener {
 
     private static final String start_index ="&start=";
     private int default_index;
     private EditText etSearch;
     private ListView lvFeed;
     private String query;
-    private UrlListViewAdapter lvAdapter;
+    private UrlListViewAdapter urlAdapter;
+    private InstaListViewAdapter instaAdapter;
     private ArrayList<Data> data = new ArrayList<>();
     private View view;
     private String[] urls;
     private ArrayList<String> datas = new ArrayList<>();
     private String access_token = "";
+    private Spinner spin;
     private CognitoCachingCredentialsProvider credentialsProvider;
     private String path;
+    private boolean instragram_search = false;
 
 
     private static int CAMERA_RESULT_LOAD_IMAGE = 0;
     private static int GALLERY_RESULT_LOAD_IMAGE = 1;
+    private String[] searchEngine={"Google Custom Search", "Instagram"};
 
 
     public static HomeFragment newInstance() {
@@ -107,10 +105,8 @@ public class HomeFragment extends Fragment implements AsyncResponse{
                 "us-east-1:7abffe46-aaa6-40a4-934c-e2e707f38fdc", // Identity pool ID
                 Regions.US_EAST_1 // Region
         );
+
     }
-
-
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -126,13 +122,22 @@ public class HomeFragment extends Fragment implements AsyncResponse{
         view = inflater.inflate(R.layout.home_fragment, container, false);
         Intent i = getActivity().getIntent();
         access_token = i.getStringExtra("access_token");
-        lvFeed = (ListView) view.findViewById(R.id.lv_feed);
-        etSearch = (EditText) view.findViewById(R.id.et_search);
+        lvFeed = view.findViewById(R.id.lv_feed);
+        etSearch = view.findViewById(R.id.et_search);
         etSearch.setActivated(false);
-        lvAdapter= new UrlListViewAdapter(getActivity(),0,datas);
-        //lvAdapter = new SimpleListViewAdapter(getActivity(), 0, data);
-        lvFeed.setAdapter(lvAdapter);
+        urlAdapter= new UrlListViewAdapter(getActivity(),0,datas);
+        instaAdapter = new InstaListViewAdapter(getActivity(), 0, data);
 
+        //DEFAULT ADAPTER
+        lvFeed.setAdapter(urlAdapter);
+
+
+        //SPINNER
+        spin = view.findViewById(R.id.simpleSpinner);
+        spin.setOnItemSelectedListener(this);
+
+        SpinnerViewAdapter customAdapter=new SpinnerViewAdapter(getActivity().getApplicationContext(),searchEngine);
+        spin.setAdapter(customAdapter);
 
         FloatingActionButton galleryBtn = view.findViewById(R.id.file);
         FloatingActionButton cameraBtn = view.findViewById(R.id.camera);
@@ -171,9 +176,10 @@ public class HomeFragment extends Fragment implements AsyncResponse{
 
                     } else {
                         query = etSearch.getText().toString().replace(" ", "+");
-                        lvAdapter.clearListView();
-                        new GoogleCustomSearchTask(HomeFragment.this).execute(query);
-                        //fetchData(etSearch.getText().toString());
+                        urlAdapter.clearListView();
+                        instaAdapter.clearListView();
+                        default_index =0;
+                        fetchData(etSearch.getText().toString());
                         etSearch.setText(etSearch.getText().toString());
                         etSearch.clearFocus();
                     }
@@ -196,13 +202,14 @@ public class HomeFragment extends Fragment implements AsyncResponse{
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
+                if (!instragram_search && scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE
                         && (lvFeed.getLastVisiblePosition() - lvFeed.getHeaderViewsCount() -
-                        lvFeed.getFooterViewsCount()) >= (lvAdapter.getCount() - 1)) {
+                        lvFeed.getFooterViewsCount()) >= (urlAdapter.getCount() - 1)) {
                         default_index = default_index +10;
                         new GoogleCustomSearchTask(HomeFragment.this).execute(query+start_index+String.valueOf(default_index));
 
                 }
+
             }
 
             @Override
@@ -212,36 +219,68 @@ public class HomeFragment extends Fragment implements AsyncResponse{
         });
     }
 
+    //Performing action onItemSelected and onNothing selected
+    @Override
+    public void onItemSelected(AdapterView<?> arg0, View arg1, int position,long id) {
+        Toast.makeText(getActivity().getApplicationContext(), searchEngine[position], Toast.LENGTH_LONG).show();
+        if(searchEngine[position].equals("Instagram")){
+            instragram_search = true;
+            lvFeed.setAdapter(instaAdapter);
+        }
+        else {
+            instragram_search = false;
+            lvFeed.setAdapter(urlAdapter);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> arg0) {
+
+    }
+
 
     public void fetchData(String tag) {
-        Call<InstagramResponse> call = RestClient.getRetrofitService().getTagPhotos(tag, access_token);
-        call.enqueue(new Callback<InstagramResponse>() {
-            @Override
-            public void onResponse(Call<InstagramResponse> call, Response<InstagramResponse> response) {
 
-                if (response.body() != null) {
+        if(instragram_search) {
 
-                    for(int i = 0; i < response.body().getData().length; i++){
+            if(tag.split(" ").length>1){
+                Toast.makeText(getActivity().getApplicationContext(), "With Instagram One Tag Search is allowed", Toast.LENGTH_LONG).show();
+            }
 
-                        //Double Tag Problem bypass
-                        if(filter(response.body().getData()[i].getTags())) {
-                            data.add(response.body().getData()[i]);
+            else {
+                Call<InstagramResponse> call = RestClient.getRetrofitService().getTagPhotos(tag, access_token);
+                call.enqueue(new Callback<InstagramResponse>() {
+                    @Override
+                    public void onResponse(Call<InstagramResponse> call, Response<InstagramResponse> response) {
+
+                        if (response.body() != null) {
+
+                            for (int i = 0; i < response.body().getData().length; i++) {
+
+                                //Double Tag Problem bypass
+                                if (filter(response.body().getData()[i].getTags())) {
+                                    data.add(response.body().getData()[i]);
+                                }
+
+                            }
+                            instaAdapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), "No results found", Toast.LENGTH_SHORT).show();
                         }
-
                     }
-                    lvAdapter.notifyDataSetChanged();
-                }
-                else {
-                    Toast.makeText(getActivity().getApplicationContext(), "No results found", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<InstagramResponse> call, Throwable t) {
-                //Handle failure
-                Toast.makeText(getActivity().getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
+                    @Override
+                    public void onFailure(Call<InstagramResponse> call, Throwable t) {
+                        //Handle failure
+                        Toast.makeText(getActivity().getApplicationContext(), t.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
             }
-        });
+        }
+
+        else {
+            new GoogleCustomSearchTask(HomeFragment.this).execute(query);
+        }
     }
 
     @Override
@@ -257,7 +296,7 @@ public class HomeFragment extends Fragment implements AsyncResponse{
             for (int i = 0; i < urls.length; i++) {
                 datas.add(urls[i]);
             }
-            lvAdapter.notifyDataSetChanged();
+            urlAdapter.notifyDataSetChanged();
         }
         else{
             //POP UP is not a tattoo!!
@@ -267,7 +306,10 @@ public class HomeFragment extends Fragment implements AsyncResponse{
 
     public boolean filter(Object[] tags){
         HashSet<Object> tags_set = Sets.newHashSet(tags);
-        return true;
+        if(tags_set.contains("tattoo")) {
+            return true;
+        }
+        else { return false;}
     }
 
 
@@ -291,7 +333,7 @@ public class HomeFragment extends Fragment implements AsyncResponse{
 
                 this.path = cursor.getString(column_index_data);
 
-                new AmazonRekognitionTask(this,credentialsProvider, path).execute();
+                new AmazonRekognitionTask(getActivity().getApplicationContext(),this,credentialsProvider, path).execute();
 
             }
         }
@@ -300,7 +342,7 @@ public class HomeFragment extends Fragment implements AsyncResponse{
             if (resultCode == RESULT_OK && null != data) {
                 Uri selectedImage = data.getData();
                 this.path = getRealPathFromURI(selectedImage);
-                new AmazonRekognitionTask(this,credentialsProvider,path).execute();
+                new AmazonRekognitionTask(getActivity().getApplicationContext(),this,credentialsProvider,path).execute();
             }
         }
 
@@ -338,7 +380,6 @@ public class HomeFragment extends Fragment implements AsyncResponse{
             startActivity(shareIntent);
         } else {
             // bring user to the market to download the app.
-            // or let them choose an app?
             intent = new Intent(Intent.ACTION_VIEW);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setData(Uri.parse("market://details?id="

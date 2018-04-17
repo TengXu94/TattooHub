@@ -21,12 +21,12 @@ import xu_aaabeck.tattoohub.R;
  * Created by root on 08.03.18.
  */
 
-public class SimpleListViewAdapter extends ArrayAdapter<Data> {
+public class InstaListViewAdapter extends ArrayAdapter<Data> {
 
     private Context context;
     private ArrayList<Data> data;
 
-    public SimpleListViewAdapter(Context context, int textViewResourceId, ArrayList<Data> objects) {
+    public InstaListViewAdapter(Context context, int textViewResourceId, ArrayList<Data> objects) {
         super(context, textViewResourceId, objects);
         this.context = context;
         this.data = objects;

@@ -1,5 +1,8 @@
 package tasks;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -10,6 +13,7 @@ import com.amazonaws.services.rekognition.model.DetectLabelsResult;
 import com.amazonaws.services.rekognition.model.Image;
 import com.amazonaws.services.rekognition.model.Label;
 import com.amazonaws.util.IOUtils;
+import com.google.android.gms.tasks.Task;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,18 +25,38 @@ import interfaces.AsyncResponse;
 
 public class AmazonRekognitionTask extends AsyncTask<String, Void, String> {
 
-
-    public AsyncResponse delegate = null;
+    private static final int DIALOG_DOWNLOAD_PROGRESS = 0;
+    private ProgressDialog mProgressDialog;
+    private AsyncResponse delegate = null;
+    private Context context;
     private CognitoCachingCredentialsProvider credentialsProvider;
     private String path;
 
-    public AmazonRekognitionTask(AsyncResponse delegate, CognitoCachingCredentialsProvider credentialsProvider,
-                                  String path) {
+    public AmazonRekognitionTask(Context context, AsyncResponse delegate, CognitoCachingCredentialsProvider credentialsProvider,
+                                 String path) {
         this.delegate = delegate;
+        this.context = context;
         this.credentialsProvider = credentialsProvider;
         this.path = path;
     }
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        // Create ProgressBar
+        mProgressDialog = new ProgressDialog(context);
+        // Set your ProgressBar Title
+        mProgressDialog.setTitle("Task");
+        // Set your ProgressBar Message
+        mProgressDialog.setMessage("Recognizing any tattoos... Please Wait!");
+        mProgressDialog.setIndeterminate(false);
+        mProgressDialog.setMax(100);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        // Show ProgressBar
+        mProgressDialog.setCancelable(false);
+        //  mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.show();
+    }
     @Override
     protected String doInBackground(String... strings) {
 
@@ -80,6 +104,7 @@ public class AmazonRekognitionTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
+        mProgressDialog.dismiss();
         this.delegate.processFinish(result);
     }
 }

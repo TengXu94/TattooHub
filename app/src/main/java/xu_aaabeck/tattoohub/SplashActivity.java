@@ -46,13 +46,7 @@ public class SplashActivity extends AppCompatActivity implements AsyncResponse {
         if(logged) {
             this.access_token= prefs.getString("access_token",null);
             new InstagramUserInfoTask(this,"username").execute(access_token);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(jump_to_home);
-                    finish();
-                }
-            }, SPLASH_TIME_OUT);
+
         }
         else{
             new Handler().postDelayed(new Runnable() {
@@ -73,5 +67,12 @@ public class SplashActivity extends AppCompatActivity implements AsyncResponse {
         ((Constants)this.getApplication()).setHash(this.username);
         this.jump_to_home = new Intent(this, HomeActivity.class);
         this.jump_to_home.putExtra("access_token", access_token);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(jump_to_home);
+                finish();
+            }
+        }, SPLASH_TIME_OUT);
     }
 }
