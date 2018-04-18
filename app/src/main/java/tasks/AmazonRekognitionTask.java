@@ -35,6 +35,7 @@ public class AmazonRekognitionTask extends AsyncTask<String, Void, String> {
     private CognitoCachingCredentialsProvider credentialsProvider;
     private String path;
     private AlertDialog alertDialog;
+    private boolean tattoo_found;
 
     public AmazonRekognitionTask(AsyncResponse delegate, CognitoCachingCredentialsProvider credentialsProvider,
                                  String path, ProgressDialog dialog, AlertDialog alertDialog) {
@@ -63,7 +64,7 @@ public class AmazonRekognitionTask extends AsyncTask<String, Void, String> {
     }
     @Override
     protected String doInBackground(String... strings) {
-
+        tattoo_found = false;
         ByteBuffer imageBytes = null;
 
         String message = "";
@@ -94,7 +95,11 @@ public class AmazonRekognitionTask extends AsyncTask<String, Void, String> {
                     message = message + label.getName() + ": " + label.getConfidence().toString() + "\n";
                     if(label.getName().equals("Tattoo")){
                         output = label.getName();
+                        tattoo_found = true;
                     }
+                }
+                if(!tattoo_found){
+                    message = message + " It seems there is any tattoo in the image, please take a photo again";
                 }
 
             } catch (Exception e) {

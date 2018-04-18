@@ -329,10 +329,6 @@ public class HomeFragment extends Fragment implements AsyncResponse, AdapterView
             }
             urlAdapter.notifyDataSetChanged();
         }
-        else if (!result.equals(("Tattoo"))){
-            //POP UP is not a tattoo!!
-            showPopup();
-        }
     }
 
     public boolean filter(Object[] tags){
@@ -419,18 +415,5 @@ public class HomeFragment extends Fragment implements AsyncResponse, AdapterView
         }
     }
 
-    public void showPopup() {
-
-        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setTitle("Alert");
-        alertDialog.setMessage("It seems that there is any tattoo in this image/photo please zoom on the tattoo if we are wrong");
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
-    }
 
 }
