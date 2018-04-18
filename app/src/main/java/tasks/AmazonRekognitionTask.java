@@ -1,8 +1,10 @@
 package tasks;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -28,20 +30,19 @@ import interfaces.AsyncResponse;
 
 public class AmazonRekognitionTask extends AsyncTask<String, Void, String> {
 
-    private static final int DIALOG_DOWNLOAD_PROGRESS = 0;
     private ProgressDialog mProgressDialog;
     private AsyncResponse delegate = null;
-    private Context context;
     private CognitoCachingCredentialsProvider credentialsProvider;
     private String path;
+    private AlertDialog alertDialog;
 
-    public AmazonRekognitionTask(Context context, AsyncResponse delegate, CognitoCachingCredentialsProvider credentialsProvider,
-                                 String path, ProgressDialog dialog) {
+    public AmazonRekognitionTask(AsyncResponse delegate, CognitoCachingCredentialsProvider credentialsProvider,
+                                 String path, ProgressDialog dialog, AlertDialog alertDialog) {
         this.delegate = delegate;
-        this.context = context;
         this.credentialsProvider = credentialsProvider;
         this.path = path;
         this.mProgressDialog = dialog;
+        this.alertDialog = alertDialog;
     }
 
     @Override
@@ -65,6 +66,8 @@ public class AmazonRekognitionTask extends AsyncTask<String, Void, String> {
 
         ByteBuffer imageBytes = null;
 
+        String message = "";
+        String output ="";
         try (InputStream inputStream = new FileInputStream(new File(path))) {
             imageBytes = ByteBuffer.wrap(IOUtils.toByteArray(inputStream));
         } catch (Exception e) {
@@ -88,8 +91,9 @@ public class AmazonRekognitionTask extends AsyncTask<String, Void, String> {
                 System.out.println("Detected labels for " + path);
                 for (Label label : labels) {
                     System.out.println(label.getName() + ": " + label.getConfidence().toString());
+                    message = message + label.getName() + ": " + label.getConfidence().toString() + "\n";
                     if(label.getName().equals("Tattoo")){
-                        return label.getName();
+                        output = label.getName();
                     }
                 }
 
@@ -100,7 +104,8 @@ public class AmazonRekognitionTask extends AsyncTask<String, Void, String> {
         else {
             System.out.println("FILE NOT FOUND");
         }
-        return "";
+        alertDialog.setMessage(message);
+        return output;
 
 
     }
@@ -109,6 +114,7 @@ public class AmazonRekognitionTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         mProgressDialog.setProgress(100);
         mProgressDialog.dismiss();
+        alertDialog.show();
         this.delegate.processFinish(result);
     }
 }

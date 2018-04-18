@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -78,7 +79,7 @@ public class HomeFragment extends Fragment implements AsyncResponse, AdapterView
     private String path;
     private boolean instragram_search = false;
     private ProgressDialog dialog;
-
+    private AlertDialog labels_dialog;
 
     private static int CAMERA_RESULT_LOAD_IMAGE = 0;
     private static int GALLERY_RESULT_LOAD_IMAGE = 1;
@@ -106,6 +107,16 @@ public class HomeFragment extends Fragment implements AsyncResponse, AdapterView
 
         //DIALOG
         dialog = new ProgressDialog(getActivity());
+
+        //LABELS DIALOG
+        labels_dialog = new AlertDialog.Builder(getActivity()).create();
+        labels_dialog.setTitle("Labels Recognized");
+        labels_dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
 
         //AWS credentials
         credentialsProvider = new CognitoCachingCredentialsProvider(
@@ -301,18 +312,24 @@ public class HomeFragment extends Fragment implements AsyncResponse, AdapterView
     public void processFinish(String result){
         //ok share
         if(result.equals("Tattoo")){
-            shareIntagramIntent("file://" + path);
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    labels_dialog.dismiss();
+                    shareIntagramIntent("file://" + path);
+                }
+            }, 1000);
         }
         //google download
         if(!result.equals("Tattoo") && result.length() > 1) {
             this.urls = result.split(" ");
-            System.out.println(urls);
             for (int i = 0; i < urls.length; i++) {
                 datas.add(urls[i]);
             }
             urlAdapter.notifyDataSetChanged();
         }
-        else{
+        else if (!result.equals(("Tattoo"))){
             //POP UP is not a tattoo!!
             showPopup();
         }
@@ -347,7 +364,7 @@ public class HomeFragment extends Fragment implements AsyncResponse, AdapterView
 
                 this.path = cursor.getString(column_index_data);
 
-                new AmazonRekognitionTask(getActivity(),this,credentialsProvider, path, dialog).execute();
+                new AmazonRekognitionTask(this,credentialsProvider, path, dialog, labels_dialog).execute();
 
             }
         }
@@ -356,7 +373,7 @@ public class HomeFragment extends Fragment implements AsyncResponse, AdapterView
             if (resultCode == RESULT_OK && null != data) {
                 Uri selectedImage = data.getData();
                 this.path = getRealPathFromURI(selectedImage);
-                new AmazonRekognitionTask(getActivity(),this,credentialsProvider,path,dialog).execute();
+                new AmazonRekognitionTask(this,credentialsProvider,path,dialog, labels_dialog).execute();
             }
         }
 
